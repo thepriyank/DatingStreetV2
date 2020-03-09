@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nowmagnate.seeker_ui">
+    package="com.nowmagnate.seeker">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,34 +11,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".basicInfoActivity" />
-        <activity android:name=".LoginRegister">
+        <activity android:name="com.nowmagnate.seeker.basicInfoActivity" />
+        <activity android:name="com.nowmagnate.seeker.LoginRegister">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PrivacyPermission" />
-        <activity android:name=".VIPMember" />
-        <activity android:name=".ChangePlans" />
-        <activity android:name=".ReferEarn" />
-        <activity android:name=".WhoLikesYou" />
-        <activity android:name=".CoinTask" />
-        <activity android:name=".EarnCoins" />
-        <activity android:name=".BuyCoins" />
-        <activity android:name=".UseCoins" />
-        <activity android:name=".ProfileDetail" />
-        <activity android:name=".NotificationChat" />
-        <activity android:name=".HelpFeedback" />
-        <activity android:name=".AboutUs" />
-        <activity android:name=".Verification" />
-        <activity android:name=".EditProfileInfo" />
-        <activity android:name=".AddEditProfileImages" />
-        <activity android:name=".ShowMeWho" />
-        <activity android:name=".Settings" />
-        <activity android:name=".AccountSecurity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name="com.nowmagnate.seeker.PrivacyPermission" />
+        <activity android:name="com.nowmagnate.seeker.VIPMember" />
+        <activity android:name="com.nowmagnate.seeker.ChangePlans" />
+        <activity android:name="com.nowmagnate.seeker.ReferEarn" />
+        <activity android:name="com.nowmagnate.seeker.WhoLikesYou" />
+        <activity android:name="com.nowmagnate.seeker.CoinTask" />
+        <activity android:name="com.nowmagnate.seeker.EarnCoins" />
+        <activity android:name="com.nowmagnate.seeker.BuyCoins" />
+        <activity android:name="com.nowmagnate.seeker.UseCoins" />
+        <activity android:name="com.nowmagnate.seeker.ProfileDetail" />
+        <activity android:name="com.nowmagnate.seeker.NotificationChat" />
+        <activity android:name="com.nowmagnate.seeker.HelpFeedback" />
+        <activity android:name="com.nowmagnate.seeker.AboutUs" />
+        <activity android:name="com.nowmagnate.seeker.Verification" />
+        <activity android:name="com.nowmagnate.seeker.EditProfileInfo" />
+        <activity android:name="com.nowmagnate.seeker.AddEditProfileImages" />
+        <activity android:name="com.nowmagnate.seeker.ShowMeWho" />
+        <activity android:name="com.nowmagnate.seeker.Settings" />
+        <activity android:name="com.nowmagnate.seeker.AccountSecurity" />
+        <activity android:name="com.nowmagnate.seeker.MainActivity" />
     </application>
 
 </manifest>
