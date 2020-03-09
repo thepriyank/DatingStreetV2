@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="rectangle">
+            <solid android:color="#EF5557"/>
+
+            <size
+                android:height="40dp"
+                android:width="80dp"/>
+
+            <corners
+                android:bottomRightRadius="20dp"
+                android:topRightRadius="20dp"/>
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/ic_date_range_black_24dp"
+        android:gravity="center"
+        android:right="5dp"
+        android:bottom="1dp"/>
+</layer-list>

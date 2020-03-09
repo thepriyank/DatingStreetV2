@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="DatingTextColor">#FF0029</color>
+    <color name="StreetTextColor">#231166</color>
+    <color name="TextColor">#471111</color>
+    <color name="SelectColor">#EF5557</color>
+    <color name="unSelectColor">#979595</color>
+    <color name="Transparent">#00979595</color>
+</resources>

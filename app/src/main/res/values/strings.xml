@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Seeker_UI</string>
+    <string name="currentProf">Current Profession</string>
+    <string name="highEdu">Highest Eduction</string>
+
+    <string-array name="prof">
+        <item>Select</item>
+        <item>Student</item>
+        <item>Employed</item>
+        <item>Self Employed</item>
+        <item>Freelancer</item>
+        <item>Entrepreneur</item>
+    </string-array>
+
+    <string-array name="edu">
+        <item>Select</item>
+        <item>Select</item>
+        <item>PhD</item>
+        <item>Masters in Arts</item>
+        <item>Masters in Business</item>
+        <item>Masters in Commerce</item>
+        <item>Masters in Computers</item>
+        <item>Masters in Engineering</item>
+        <item>Masters in Law</item>
+        <item>Masters in Medicine</item>
+        <item>Masters in Science</item>
+        <item>Masters in Others</item>
+        <item>Bachelors in Arts</item>
+        <item>Bachelors in Business</item>
+        <item>Bachelors in Commerce</item>
+        <item>Bachelors in Computers</item>
+        <item>Bachelors in Engineering</item>
+        <item>Bachelors in Law</item>
+        <item>Bachelors in Medicine</item>
+        <item>Bachelors in Science</item>
+        <item>Bachelors in Others</item>
+        <item>High School</item>
+        <item>In School</item>
+        <item>Others</item>
+    </string-array>
+</resources>

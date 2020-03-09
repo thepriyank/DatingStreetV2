@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    tools:context=".Settings">
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar_misc" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="Discovery Settings"
+            android:textSize="18sp"
+            android:textColor="@color/TextColor"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            android:elevation="10dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Location"
+                    android:textColor="@color/TextColor"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/location_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="PlaceHolder >"
+                    android:textColor="@color/TextColor"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="Distance"
+                    android:textColor="@color/TextColor"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                <TextView
+                    android:id="@+id/distance_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 Km"
+                    android:layout_margin="16dp"
+                    android:textColor="@color/TextColor"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/location_text" />
+
+                <SeekBar
+                    android:id="@+id/distance_seekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/show_me_who_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="16dp"
+                    android:clickable="true"
+                    android:stateListAnimator="@animator/elevation_animation"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/distance_seekbar"
+                    app:layout_constraintStart_toStartOf="@+id/distance_seekbar"
+                    app:layout_constraintTop_toBottomOf="@+id/distance_seekbar">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:background="#00A76B"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingRight="20dp"
+                        android:paddingLeft="20dp"
+                        android:text="SHOW ME WHO"
+                        android:textColor="#ffffff"
+                        android:textSize="20sp" />
+
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="App Settings"
+                android:textSize="18sp"
+                android:textColor="@color/TextColor"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/notification_and_chat_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2.5dp"
+                app:cardCornerRadius="5dp"
+                android:clickable="true"
+                android:stateListAnimator="@animator/elevation_animation"
+                android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/distance_seekbar"
+                app:layout_constraintStart_toStartOf="@+id/distance_seekbar"
+                app:layout_constraintTop_toBottomOf="@+id/distance_seekbar">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_marginLeft="10dp"
+                        android:text="NOTIFICATION &amp; CHAT"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:padding="5dp"
+                        android:layout_weight="4"
+                        android:textSize="18sp"
+                        android:textColor="@color/TextColor"
+                        tools:layout_editor_absoluteX="6dp"
+                        tools:layout_editor_absoluteY="483dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="20dp"
+                        android:text=">"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="6dp"
+                        tools:layout_editor_absoluteY="483dp" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/account_and_security_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginBottom="2.5dp"
+                app:cardCornerRadius="5dp"
+                android:clickable="true"
+                android:stateListAnimator="@animator/elevation_animation"
+                android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/distance_seekbar"
+                app:layout_constraintStart_toStartOf="@+id/distance_seekbar"
+                app:layout_constraintTop_toBottomOf="@+id/distance_seekbar">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_marginLeft="10dp"
+                        android:text="ACCOUNT &amp; SECURITY"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:padding="5dp"
+                        android:layout_weight="4"
+                        android:textSize="18sp"
+                        android:textColor="@color/TextColor"
+                        tools:layout_editor_absoluteX="6dp"
+                        tools:layout_editor_absoluteY="483dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="20dp"
+                        android:text=">"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="6dp"
+                        tools:layout_editor_absoluteY="483dp" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/privacy_and_permission_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginBottom="2.5dp"
+                app:cardCornerRadius="5dp"
+                android:clickable="true"
+                android:stateListAnimator="@animator/elevation_animation"
+                android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/distance_seekbar"
+                app:layout_constraintStart_toStartOf="@+id/distance_seekbar"
+                app:layout_constraintTop_toBottomOf="@+id/distance_seekbar">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_marginLeft="10dp"
+                        android:text="PRIVACY &amp; PERMISSION"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:padding="5dp"
+                        android:layout_weight="4"
+                        android:textSize="18sp"
+                        android:textColor="@color/TextColor"
+                        tools:layout_editor_absoluteX="6dp"
+                        tools:layout_editor_absoluteY="483dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="20dp"
+                        android:text=">"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="6dp"
+                        tools:layout_editor_absoluteY="483dp" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/help_and_feedback_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginBottom="2.5dp"
+                app:cardCornerRadius="5dp"
+                android:stateListAnimator="@animator/elevation_animation"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/distance_seekbar"
+                app:layout_constraintStart_toStartOf="@+id/distance_seekbar"
+                app:layout_constraintTop_toBottomOf="@+id/distance_seekbar">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_marginLeft="10dp"
+                        android:text="HELP &amp; FEEDBACK"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:padding="5dp"
+                        android:layout_weight="4"
+                        android:textSize="18sp"
+                        android:textColor="@color/TextColor"
+                        tools:layout_editor_absoluteX="6dp"
+                        tools:layout_editor_absoluteY="483dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="20dp"
+                        android:text=">"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="6dp"
+                        tools:layout_editor_absoluteY="483dp" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/about_us_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginBottom="2.5dp"
+                app:cardCornerRadius="5dp"
+                android:stateListAnimator="@animator/elevation_animation"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/distance_seekbar"
+                app:layout_constraintStart_toStartOf="@+id/distance_seekbar"
+                app:layout_constraintTop_toBottomOf="@+id/distance_seekbar">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_marginLeft="10dp"
+                        android:text="ABOUT US"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:padding="5dp"
+                        android:layout_weight="4"
+                        android:textSize="18sp"
+                        android:textColor="@color/TextColor"
+                        tools:layout_editor_absoluteX="6dp"
+                        tools:layout_editor_absoluteY="483dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="20dp"
+                        android:text=">"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="6dp"
+                        tools:layout_editor_absoluteY="483dp" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
