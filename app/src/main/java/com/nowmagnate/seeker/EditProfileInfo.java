@@ -3,6 +3,8 @@ package com.nowmagnate.seeker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +30,7 @@ import com.nowmagnate.seeker.util.GradientStatusBar;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 public class EditProfileInfo extends AppCompatActivity  {
 
@@ -46,24 +49,20 @@ public class EditProfileInfo extends AppCompatActivity  {
     private EditText location;
     private TextView heightText;
 
-
-
-
     private CardView update;
-
+    private RecyclerView rvTraits;
+    private Vector<PersonalityTraits> personalityTraits= new Vector<>();
+    private GridLayoutManager gridLayoutManager;
     //Var
 
-
-    Map name,about,
-            height_feet,height_inch,location_base,
-            current_profession,highest_edu;
+    Map UserProfile;
 
 
     boolean isAllFieldsClear = true;
     boolean isAllFieldsUpdated = false;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference("seeker-378eb");
+    DatabaseReference ref = database.getReference();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
 
@@ -85,9 +84,9 @@ public class EditProfileInfo extends AppCompatActivity  {
         location = findViewById(R.id.location_editText);
         update = findViewById(R.id.update);
         heightText = findViewById(R.id.height_text);
+        rvTraits = findViewById(R.id.rvTraits);
 
         GradientStatusBar.setStatusBarGradiant(this);
-
 
         toolbarTitle.setText("EDIT PROFILE");
         toolbarBack.setOnClickListener(new View.OnClickListener() {
@@ -98,11 +97,8 @@ public class EditProfileInfo extends AppCompatActivity  {
         });
 
         initSpinner();
-
-        initUI();
-
-
-
+        fillUserDetails(user.getUid());
+        //initUI();
 
         location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,24 +108,6 @@ public class EditProfileInfo extends AppCompatActivity  {
             }
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,6 +115,91 @@ public class EditProfileInfo extends AppCompatActivity  {
             }
         });
 
+    }
+
+    private void fillUserDetails(String userId) {
+        DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
+        mUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("name")!=null){
+                        profileName.setText(map.get("name").toString());
+                    }
+                    if(map.get("height_feet")!=null){
+                        heightFeet.setText("Height:"+map.get("height_feet").toString());
+                    }
+                    if(map.get("height_inch")!=null){
+                        heightInch.setText("Height:"+map.get("height_inch").toString());
+                    }
+                    if(map.get("about")!=null){
+                        aboutMe.setText(map.get("about").toString());
+                    }
+                    if(map.get("location_base")!=null){
+                       location.setText(map.get("location_base").toString());
+                    }
+                    if(map.get("highest_edu")!=null){
+                        edu_spinner.setSelection(Integer.parseInt(map.get("highest_edu").toString()));
+                    }
+                    if(map.get("current_profession")!=null){
+                       prof_spinner.setSelection(Integer.parseInt(map.get("current_profession").toString()));
+                    }
+
+                    if(map.get("traits")!=null){
+                        String traits[] = map.get("traits").toString().split(",");
+                        setPersonalityTraits(traits);
+                    }
+
+//                    if(map.get("profileImageUrl")!=null){
+//                        profileImages.add(map.get("profileImageUrl").toString());
+//                    }
+//                    if(map.get("image1")!=null){
+//                        profileImages.add(map.get("image1").toString());
+//                    }
+//                    if(map.get("image2")!=null){
+//                        profileImages.add(map.get("image2").toString());
+//                    }
+//                    if(map.get("image3")!=null){
+//                        profileImages.add(map.get("image3").toString());
+//                    }
+//                    if(map.get("image4")!=null){
+//                        profileImages.add(map.get("image4").toString());
+//                    }
+//                    if(map.get("image5")!=null){
+//                        profileImages.add(map.get("image5").toString());
+//                    }
+//                    if(map.get("image6")!=null){
+//                        profileImages.add(map.get("image6").toString());
+//                    }
+//                    if(map.get("image7")!=null){
+//                        profileImages.add(map.get("image7").toString());
+//                    }
+//
+//                    profileImagesPager.setAdapter(new ProfileImagesAdapter(getApplicationContext() ,profileImages));
+//                    pagerIndicator.setupWithViewPager(profileImagesPager,true);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void setPersonalityTraits(String values[]) {
+
+        for(int i=0;i<values.length;++i){
+            personalityTraits.add(new PersonalityTraits(values[i],false));
+        }
+        rvTraits.setHasFixedSize(true);
+        //rvTraits.setLayoutManager(new LinearLayoutManager(getApplicationContext(),RecyclerView.VERTICAL,false));
+        gridLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
+        rvTraits.setLayoutManager(gridLayoutManager);
+        rvTraits.setAdapter(new UserViewPersonalityAdapter(getApplicationContext(),personalityTraits));
     }
 
     @Override
@@ -183,21 +246,9 @@ public class EditProfileInfo extends AppCompatActivity  {
         });
     }
 
-
-
-
-
-
-
     public void update(){
-        name = new HashMap();
-        about= new HashMap();
-        height_feet = new HashMap();
-        height_inch= new HashMap();
-        location_base= new HashMap();
-        current_profession = new HashMap();
-        highest_edu = new HashMap();
 
+        UserProfile = new HashMap();
 
         if(heightFeet.getText().toString().isEmpty()||heightInch.getText().toString().isEmpty()){
             heightText.setTextColor(Color.RED);
@@ -218,22 +269,18 @@ public class EditProfileInfo extends AppCompatActivity  {
 
 
             if(profileName.getText().toString().isEmpty()){
-            name.put("name",user.getDisplayName());}
+                UserProfile.put("name",user.getDisplayName());}
             else{
-                name.put("name",profileName.getText().toString());
+                UserProfile.put("name",profileName.getText().toString());
             }
-            about.put("about",aboutMe.getText().toString());
-            height_feet.put("height_feet",heightFeet.getText().toString());
-            height_inch.put("height_inch",heightInch.getText().toString());
-            current_profession.put("current_profession",prof_spinner.getSelectedItem().toString());
-            highest_edu.put("highest_edu",edu_spinner.getSelectedItem().toString());
+            UserProfile.put("about",aboutMe.getText().toString());
+            UserProfile.put("height_feet",heightFeet.getText().toString());
+            UserProfile.put("height_inch",heightInch.getText().toString());
+            UserProfile.put("current_profession",String.valueOf(prof_spinner.getSelectedItemId()));
+            UserProfile.put("highest_edu",String.valueOf(edu_spinner.getSelectedItemId()));
 
-            ref.updateChildren(name);
-            ref.updateChildren(about);
-            ref.updateChildren(height_feet);
-            ref.updateChildren(height_inch);
-            ref.updateChildren(current_profession);
-            ref.updateChildren(highest_edu);
+            ref.child("Users").child(user.getUid()).updateChildren(UserProfile);
+
             isAllFieldsUpdated = true;
             startActivity(new Intent(EditProfileInfo.this,MainActivity.class));
             SharedPreferences.Editor editor = getSharedPreferences("UPDATED", MODE_PRIVATE).edit();
@@ -242,10 +289,6 @@ public class EditProfileInfo extends AppCompatActivity  {
         }
 
     }
-
-
-
-
 
     public void initUI(){
         ref = ref.child(user.getUid());
@@ -344,6 +387,5 @@ public class EditProfileInfo extends AppCompatActivity  {
             Toast.makeText(EditProfileInfo.this, s, Toast.LENGTH_SHORT).show();
         }
     }
-
 
 }

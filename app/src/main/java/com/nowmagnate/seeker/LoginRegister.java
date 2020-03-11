@@ -1,11 +1,13 @@
 package com.nowmagnate.seeker;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -26,6 +28,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,7 +57,7 @@ public class LoginRegister extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference("seeker-378eb");
+    DatabaseReference ref = database.getReference().child("Users");
 
     private CardView googleCard, facebookCard, phoneCard;
 
@@ -110,7 +113,7 @@ public class LoginRegister extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 disableClick();
-                onLoginCardClick();
+//                onLoginCardClick();
             }
         });
 
@@ -118,28 +121,51 @@ public class LoginRegister extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 disableClick();
-                onLoginCardClick();
+//                onLoginCardClick();
+            }
+        });
+    }
+
+    public void onLoginCardClick(GoogleSignInAccount acct){
+        final String name = acct.getDisplayName();
+        final Uri imgUrl = acct.getPhotoUrl();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        ref.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.hasChild("UserInfo")){
+                    Calendar cad = Calendar.getInstance();
+                    cad.add(Calendar.DATE,30);
+
+                    Map userProfile = new HashMap<>();
+                    userProfile.put("name",name);
+                    userProfile.put("userdp", imgUrl.toString());
+
+                    userProfile.put("endPlan",cad.getTime().toString().substring(0,10));
+                    userProfile.put("activePlan","basic");
+                    userProfile.put("superLikes",0);
+                    userProfile.put("coins",0);
+
+                    ref.child(user.getUid()).setValue(userProfile);
+//                                .updateChildren(userProfile);
+                    startActivity(new Intent(LoginRegister.this,basicInfoActivity.class));
+                }else{
+                    startActivity(new Intent(LoginRegister.this,MainActivity.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
 
-
-    }
-
-    public void onLoginCardClick(){
-        if(!isUserLoggedIn){
-            FirebaseUser user = mAuth.getCurrentUser();
-        Map<String,String> id = new HashMap<>();
-        id.put(user.getUid(),getResources().getString(R.string.default_web_client_id));
-        ref.setValue(id);
-        Map<String,String> name = new HashMap<>();
-        name.put("name",user.getDisplayName());
-        ref.child(user.getUid()).setValue(name);
-        isInfo();
-        finish();}
-        else {
-            startActivity(new Intent(LoginRegister.this,MainActivity.class));
-            finish();
-        }
+//        if(!isUserLoggedIn){
+//            isInfo();
+//            finish();}
+//        else {
+//            startActivity(new Intent(LoginRegister.this,MainActivity.class));
+//            finish();
+//        }
     }
 
     @Override
@@ -153,12 +179,9 @@ public class LoginRegister extends AppCompatActivity {
     public void SplashScreenAnim(){
         Handler handler = new Handler();
 
-        animStreet.animate().translationX(0).setDuration(800);
-        animDating.animate().translationY(0).setDuration(800);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Do something after 5s = 5000ms
+        animStreet.animate().translationX(0).setDuration(2000);
+        animDating.animate().translationY(0).setDuration(2000);
+
                 if(isUserLoggedIn){
                     isInfo();
                 }
@@ -166,8 +189,6 @@ public class LoginRegister extends AppCompatActivity {
                     splashScreen.animate().translationX(splashScreen.getRight()).alpha(0);
                     splashScreen.setClickable(false);
                 }
-            }
-        }, 2000);
     }
 
     public void disableClick(){
@@ -210,7 +231,7 @@ public class LoginRegister extends AppCompatActivity {
     // [END onactivityresult]
 
     // [START auth_with_google]
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         // [START_EXCLUDE silent]
         // [END_EXCLUDE]
@@ -223,8 +244,9 @@ public class LoginRegister extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            onLoginCardClick();
+                            isUserLoggedIn= true;
+
+                            onLoginCardClick(acct);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -252,21 +274,7 @@ public class LoginRegister extends AppCompatActivity {
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        onLoginCardClick();
-                    }
-                });
-    }
-
-    private void revokeAccess() {
-        // Firebase sign out
-        mAuth.signOut();
-
-        // Google revoke access
-        mGoogleSignInClient.revokeAccess().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        onLoginCardClick();
+//                        onLoginCardClick();
                     }
                 });
     }
@@ -278,75 +286,28 @@ public class LoginRegister extends AppCompatActivity {
     }
 
     public void isInfo(){
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference ref = database.getReference("seeker-378eb");
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
-
-        ref.child(user.getUid()).child("phone").addValueEventListener(new ValueEventListener() {
+        String userId = user.getUid();
+        ref.child("UserInfo").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()==null){
-                    ref.child(user.getUid()).child("activePlan").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.getValue()==null) {
-                                Calendar cad = Calendar.getInstance();
-                                cad.add(Calendar.DATE,30);
-                                Map m = new HashMap();
-                                Map s = new HashMap();
-                                Map n = new HashMap();
-                                Map endPlan = new HashMap();
-                                endPlan.put("endPlan",cad.getTime().toString().substring(0,10));
-                                m.put("activePlan","basic");
-                                s.put("superLikes",5);
-                                n.put("name",user.getDisplayName());
-
-                                ref.child(user.getUid()).updateChildren(m);
-                                ref.child(user.getUid()).updateChildren(s);
-                                ref.child(user.getUid()).updateChildren(n);
-                                ref.child(user.getUid()).updateChildren(endPlan);
-
-                                startActivity(new Intent(LoginRegister.this,basicInfoActivity.class));
-                                finish();
-                            }else{
-                                if(!dataSnapshot.getValue().toString().equals("basic")){
-                                    ref.child(user.getUid()).child("init_date").addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if(dataSnapshot!=null) {
-                                                Calendar c = Calendar.getInstance();
-                                                String dateToday = c.getTime().toString().substring(0, 10);
-                                                if (!dataSnapshot.getValue().toString().equals(dateToday)) {
-                                                    Map s = new HashMap();
-                                                    s.put("superLikes", 5);
-                                                    ref.child(user.getUid()).updateChildren(s);
-                                                    startActivity(new Intent(LoginRegister.this,basicInfoActivity.class));
-                                                    finish();
-                                                }
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
+                if(dataSnapshot.exists()){
+                    startActivity(new Intent(LoginRegister.this, MainActivity.class));
                 }
                 else{
-                    startActivity(new Intent(LoginRegister.this,MainActivity.class));
-                    finish();
+                    Calendar cad = Calendar.getInstance();
+                    cad.add(Calendar.DATE,30);
+
+                    Map basicInfo = new HashMap();
+                    basicInfo.put("endPlan",cad.getTime().toString().substring(0,10));
+                    basicInfo.put("activePlan","basic");
+                    basicInfo.put("superLikes",0);
+                    basicInfo.put("coins",0);
+
+                    ref.child(user.getUid()).updateChildren(basicInfo);
+                    startActivity(new Intent(LoginRegister.this,basicInfoActivity.class));
                 }
+
             }
 
             @Override
@@ -354,6 +315,7 @@ public class LoginRegister extends AppCompatActivity {
 
             }
         });
+
     }
 
 }

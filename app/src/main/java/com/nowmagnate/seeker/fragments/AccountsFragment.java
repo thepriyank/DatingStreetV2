@@ -65,7 +65,7 @@ public class AccountsFragment extends Fragment {
     private GoogleSignInClient mGoogleSignInClient;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference("seeker-378eb");
+    DatabaseReference ref = database.getReference();
 
     @Nullable
     @Override
@@ -224,7 +224,7 @@ public class AccountsFragment extends Fragment {
     }
 
     public void initUI() {
-        ref = ref.child(user.getUid());
+        ref = ref.child("Users").child(user.getUid());
         ref.child("name").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -239,7 +239,22 @@ public class AccountsFragment extends Fragment {
             }
         });
 
-        ref.child("dob").addValueEventListener(new ValueEventListener() {
+        ref.child("userdp").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+
+//                    profileImage.setText(dataSnapshot.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        ref.child("UserInfo").child("dob").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {

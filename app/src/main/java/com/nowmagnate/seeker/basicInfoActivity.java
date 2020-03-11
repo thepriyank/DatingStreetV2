@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -46,11 +47,10 @@ public class basicInfoActivity extends AppCompatActivity implements DatePickerDi
 
     boolean isAllFieldsClear = true;
 
-    Map gender,dob,
-            phone_base;
+    Map gender, dob, phone_base;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference("seeker-378eb");
+    DatabaseReference ref = database.getReference().child("Users");
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
 
@@ -151,6 +151,8 @@ public class basicInfoActivity extends AppCompatActivity implements DatePickerDi
 
     public void update(){
 
+        Map userInfo = new HashMap<>();
+
         dob = new HashMap();
         gender = new HashMap();
         phone_base = new HashMap();
@@ -184,15 +186,16 @@ public class basicInfoActivity extends AppCompatActivity implements DatePickerDi
             if(gen!=null||!gen.isEmpty()){
                 if(!dateOfBirthText.getText().toString().isEmpty()){
                     if(!dateOfBirthText.getText().toString().equals("You need to be atleast 13")){
-                    gender.put("gender", gen);
-                    phone_base.put("phone", phone.getText().toString());
-                    dob.put("dob", dateOfBirthText.getText());
-                    ref = ref.child(user.getUid());
-                    ref.updateChildren(dob);
-                    ref.updateChildren(gender);
-                    ref.updateChildren(phone_base);
-
-                    finish();
+                        userInfo.put("dob", dateOfBirthText.getText().toString());
+                        userInfo.put("gender", gen);
+                        userInfo.put("phone", phone.getText().toString() );
+                        userInfo.put("profileImageUrl", "default");
+                        userInfo.put("plan","Free");
+                        userInfo.put("coins","0");
+                        userInfo.put("profilecreated","NO");
+                        ref.child(user.getUid()).child("UserInfo").setValue(userInfo);
+                        startActivity(new Intent(basicInfoActivity.this,MainActivity.class));
+                        finish();
 
                     }
                 }

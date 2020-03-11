@@ -9,4 +9,6 @@
     <color name="SelectColor">#EF5557</color>
     <color name="unSelectColor">#979595</color>
     <color name="Transparent">#00979595</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#555555</color>
 </resources>
