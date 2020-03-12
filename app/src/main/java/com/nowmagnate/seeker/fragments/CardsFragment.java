@@ -43,7 +43,7 @@ public class CardsFragment extends Fragment {
     boolean isSuperLikeClick, rewindClick ;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference("seeker-378eb");
+    DatabaseReference ref = database.getReference();
 
     @Nullable
     @Override

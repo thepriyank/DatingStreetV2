@@ -179,9 +179,13 @@ public class LoginRegister extends AppCompatActivity {
     public void SplashScreenAnim(){
         Handler handler = new Handler();
 
-        animStreet.animate().translationX(0).setDuration(2000);
-        animDating.animate().translationY(0).setDuration(2000);
+        animStreet.animate().translationX(0).setDuration(1500);
+        animDating.animate().translationY(0).setDuration(1500);
 
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 5s = 5000ms
                 if(isUserLoggedIn){
                     isInfo();
                 }
@@ -189,6 +193,8 @@ public class LoginRegister extends AppCompatActivity {
                     splashScreen.animate().translationX(splashScreen.getRight()).alpha(0);
                     splashScreen.setClickable(false);
                 }
+            }
+        }, 2000);
     }
 
     public void disableClick(){
@@ -288,10 +294,10 @@ public class LoginRegister extends AppCompatActivity {
     public void isInfo(){
         final FirebaseUser user = mAuth.getCurrentUser();
         String userId = user.getUid();
-        ref.child("UserInfo").addValueEventListener(new ValueEventListener() {
+        ref.child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if(dataSnapshot.hasChild("UserInfo")){
                     startActivity(new Intent(LoginRegister.this, MainActivity.class));
                 }
                 else{

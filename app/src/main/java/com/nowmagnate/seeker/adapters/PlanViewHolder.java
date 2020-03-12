@@ -37,7 +37,7 @@ public class PlanViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     Context c;
     TextView sticker,price,buy;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference("planIndex");
+    DatabaseReference ref = database.getReference().child("planIndex");
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
     String SelectedPlan;
@@ -146,7 +146,7 @@ public class PlanViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
                         Map endPlan = new HashMap();
                         endPlan.put("endPlan",cad.getTime().toString().substring(0,10));
-                        DatabaseReference ref = database.getReference("seeker-378eb").child(user.getUid());
+                        DatabaseReference ref = database.getReference().child("Users").child(user.getUid());
                         ref.updateChildren(plan);
                         ref.updateChildren(endPlan);
                         ref.child("superLikes").setValue(5);

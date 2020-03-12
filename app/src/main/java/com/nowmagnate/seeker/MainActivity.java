@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
     boolean trap = true;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference("seeker-378eb");
+    DatabaseReference ref = database.getReference();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
 

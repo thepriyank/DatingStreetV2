@@ -54,7 +54,7 @@ public class CrushFabFragment extends Fragment {
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
-    DatabaseReference ref = database.getReference("seeker-378eb").child(user.getUid());
+    DatabaseReference ref = database.getReference().child("Users").child(user.getUid());
 
     @Nullable
     @Override

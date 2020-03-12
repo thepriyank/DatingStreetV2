@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.nowmagnate.seeker.util.GradientStatusBar;
-import com.squareup.picasso.Picasso;
 
 public class AddEditProfileImages extends AppCompatActivity {
 
@@ -107,6 +107,7 @@ public class AddEditProfileImages extends AppCompatActivity {
     }
 
     public void onImagePickerItemClick(ImageView i){
-        Picasso.get().load(R.drawable.placeholder).fit().into(i);
+        Glide.with(getApplication()).load(R.drawable.placeholder)
+                .into(i);
     }
 }
