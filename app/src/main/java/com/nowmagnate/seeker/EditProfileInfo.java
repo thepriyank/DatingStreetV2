@@ -309,6 +309,9 @@ public class EditProfileInfo extends AppCompatActivity implements ChooseTraits {
             UserProfile.put("highest_edu",String.valueOf(edu_spinner.getSelectedItemId()));
 
             ref.child("Users").child(user.getUid()).updateChildren(UserProfile);
+            Map profilecreation = new HashMap();
+            profilecreation.put("profilecreated","YES");
+            ref.child("Users").child(user.getUid()).child("UserInfo").updateChildren(profilecreation);
 
             isAllFieldsUpdated = true;
             startActivity(new Intent(EditProfileInfo.this,MainActivity.class));

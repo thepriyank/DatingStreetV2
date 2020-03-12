@@ -1,7 +1,11 @@
 package com.nowmagnate.seeker.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +20,25 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.lorentzos.flingswipe.SwipeFlingAdapterView;
+import com.nowmagnate.seeker.BuildConfig;
+import com.nowmagnate.seeker.Cards.arrayAdapter;
+import com.nowmagnate.seeker.Cards.cards;
+import com.nowmagnate.seeker.EditProfileInfo;
 import com.nowmagnate.seeker.MainActivity;
 import com.nowmagnate.seeker.ProfileDetail;
 import com.nowmagnate.seeker.R;
+import com.nowmagnate.seeker.ThisApplication;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CardsFragment extends Fragment {
@@ -33,17 +46,21 @@ public class CardsFragment extends Fragment {
     //UI
     private FloatingActionButton rejectFAB, acceptFAB,superFAB,rewindFAB;
 
-    private CardView profileCard;
-
+//    private CardView profileCard;
     private TextView datingText;
     private TextView streetText;
+    private String currentUId="";
+
+    int countCards =0;
+    List<cards> rowItems;
+    private com.nowmagnate.seeker.Cards.arrayAdapter arrayAdapter;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
     boolean isSuperLikeClick, rewindClick ;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference();
+    DatabaseReference ref = database.getReference().child("Users");
 
     @Nullable
     @Override
@@ -57,15 +74,92 @@ public class CardsFragment extends Fragment {
         datingText = view.findViewById(R.id.dating_text);
         streetText = view.findViewById(R.id.street_text);
 
-        profileCard = view.findViewById(R.id.profileCard);
 
-        profileCard.setOnClickListener(new View.OnClickListener() {
+        currentUId = mAuth.getCurrentUser().getUid();
+
+        getUserInfo();
+        checkForUpdates();
+        checkUserSex();
+
+
+        rowItems = new ArrayList<>();
+        arrayAdapter = new arrayAdapter(getActivity(), R.layout.card_item, rowItems );
+
+        SwipeFlingAdapterView flingContainer =  view.findViewById(R.id.frame);
+
+        flingContainer.setAdapter(arrayAdapter);
+        flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
-            public void onClick(View view) {
-                profileCard.setClickable(false);
-                startActivity(new Intent(getContext(), ProfileDetail.class));
+            public void removeFirstObjectInAdapter() {
+                Log.d("LIST", "removed object!");
+                rowItems.remove(0);
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onLeftCardExit(Object dataObject) {
+                cards obj = (cards) dataObject;
+                String userId = obj.getUserId();
+                ref.child(userId).child("connections").child("nope").child(currentUId).setValue(true);
+            Toast.makeText(getActivity(), "Left", Toast.LENGTH_SHORT).show();
+                countCards++;
+                if(countCards%10==0) {
+//                    displayInterstitialAd();
+                }
+
+            }
+
+            @Override
+            public void onRightCardExit(Object dataObject) {
+                cards obj = (cards) dataObject;
+                String userId = obj.getUserId();
+                ref.child(userId).child("connections").child("yeps").child(currentUId).setValue(true);
+                isConnectionMatch(userId);
+                Toast.makeText(getActivity(), "Right", Toast.LENGTH_SHORT).show();
+                countCards++;
+                if(countCards%10==0) {
+//                    displayInterstitialAd();
+                }
+
+            }
+
+            @Override
+            public void onAdapterAboutToEmpty(int itemsInAdapter) {
+                Toast.makeText(getActivity(), "Inside Adapter Empty Method ItemCount:"+itemsInAdapter, Toast.LENGTH_SHORT).show();
+                if(itemsInAdapter==0){
+                    acceptFAB.setVisibility(View.GONE);
+                    rejectFAB.setVisibility(View.GONE);
+                    rewindFAB.setVisibility(View.GONE);
+                    superFAB.setVisibility(View.GONE);
+                }else{
+                    acceptFAB.setVisibility(View.VISIBLE);
+                    rejectFAB.setVisibility(View.VISIBLE);
+                    rewindFAB.setVisibility(View.VISIBLE);
+                    superFAB.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onScroll(float scrollProgressPercent) {
             }
         });
+
+        flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClicked(int itemPosition, Object dataObject) {
+                Intent showUserIntent = new Intent(getActivity(), ProfileDetail.class);
+                showUserIntent.putExtra("userid",((cards)dataObject).getUserId());
+                startActivityForResult(showUserIntent, 123);
+            }
+        });
+
+//        flingContainer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                profileCard.setClickable(false);
+//                startActivity(new Intent(getContext(), ProfileDetail.class));
+//            }
+//        });
 
         superFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,9 +250,185 @@ public class CardsFragment extends Fragment {
         return view;
     }
 
+
+    private void getUserInfo() {
+        ref.child(currentUId).child("UserInfo").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("profilecreated")!=null){
+                        if(map.get("profilecreated").equals("NO")){
+                            // Create a dialog to ask for profile creation to win 5 COINS
+                            AlertDialog.Builder builder= new AlertDialog.Builder(getActivity());
+                            builder.setMessage("Complete Your Profile with Details and Image, and WIN 5 Free COINS")
+                                    .setTitle("Upload Image")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Let's Do It", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            Intent settingIntent = new Intent(getActivity(), EditProfileInfo.class);
+                                            startActivity(settingIntent);
+                                        }
+                                    });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void checkForUpdates() {
+        DatabaseReference updateDb= FirebaseDatabase.getInstance().getReference().child("Updates");
+        final Float currentVersion = Float.parseFloat(BuildConfig.VERSION_NAME);
+        updateDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    Float latestVersion = Float.parseFloat(dataSnapshot.child("latestVersion").getValue().toString());
+                    Toast.makeText(getActivity(), "Version:"+latestVersion, Toast.LENGTH_SHORT).show();
+                    if (latestVersion>currentVersion){
+                        Intent updateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ThisApplication.PlayStore_URL));
+                        startActivity(updateIntent);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void displayInterstitialAd() {
+//        if (interstitialAd.isLoaded()) {
+//            interstitialAd.show();
+//        }
+    }
+
+    private void isConnectionMatch(String userId) {
+        DatabaseReference currentUserConnectionsDb = ref.child(currentUId).child("connections").child("yeps").child(userId);
+        currentUserConnectionsDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    Toast.makeText(getActivity(), "new Connection", Toast.LENGTH_LONG).show();
+
+                    String key = FirebaseDatabase.getInstance().getReference().child("Chat").push().getKey();
+
+                    ref.child(dataSnapshot.getKey()).child("connections").child("matches").child(currentUId).child("ChatId").setValue(key);
+                    ref.child(currentUId).child("connections").child("matches").child(dataSnapshot.getKey()).child("ChatId").setValue(key);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private String userSex;
+    private String oppositeUserSex;
+
+    public void checkUserSex(){
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference userDb = ref.child(user.getUid()).child("UserInfo");
+        userDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    if (dataSnapshot.child("gender").getValue() != null){
+                        userSex = dataSnapshot.child("gender").getValue().toString();
+                        switch (userSex){
+                            case "male":
+                                oppositeUserSex = "female";
+                                break;
+                            case "female":
+                                oppositeUserSex = "male";
+                                break;
+                        }
+                        getOppositeSexUsers();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getOppositeSexUsers(){
+        ref.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.child("UserInfo").child("gender").getValue() != null) {
+                    if (dataSnapshot.exists() && !dataSnapshot.child("connections").child("nope").hasChild(currentUId)
+                            && !dataSnapshot.child("connections").child("yeps").hasChild(currentUId)
+                            && dataSnapshot.child("UserInfo").child("gender").getValue().toString().equals(oppositeUserSex)) {
+                        String profileImageUrl = "default";
+                        if (!dataSnapshot.child("UserInfo").child("profileImageUrl").getValue().equals("default")) {
+                            profileImageUrl = dataSnapshot.child("UserInfo").child("profileImageUrl").getValue().toString();
+                        }
+
+                        String initials[] = dataSnapshot.child("name").getValue().toString().split(" ");
+                        String name = "";
+                        for(int i=0; i<initials.length;i++){
+                            name+= initials[i].substring(0,1);
+                        }
+
+                        cards item = new cards(dataSnapshot.getKey(),
+                                name, profileImageUrl);
+                        rowItems.add(item);
+                        arrayAdapter.notifyDataSetChanged();
+                        Toast.makeText(getActivity(), "Inside User Fetch Method ItemCount:"+rowItems.size(), Toast.LENGTH_SHORT).show();
+                        if(rowItems.size()==0){
+                            acceptFAB.setVisibility(View.GONE);
+                            rejectFAB.setVisibility(View.GONE);
+                            rewindFAB.setVisibility(View.GONE);
+                            superFAB.setVisibility(View.GONE);
+                        }else{
+                            acceptFAB.setVisibility(View.VISIBLE);
+                            rejectFAB.setVisibility(View.VISIBLE);
+                            rewindFAB.setVisibility(View.VISIBLE);
+                            superFAB.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+
+        });
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        profileCard.setClickable(true);
+//        profileCard.setClickable(true);
     }
 }
