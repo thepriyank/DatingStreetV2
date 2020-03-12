@@ -273,7 +273,7 @@ public class CrushFabFragment extends Fragment {
 
     public void checkDate(){
         ((MainActivity)getContext()).addDateStamp();
-        ref.child("init_date").addValueEventListener(new ValueEventListener() {
+        ref.child("Users").child(user.getUid()).child("init_date").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!((MainActivity)getContext()).getDateStamp().equals(dataSnapshot.getValue())){
