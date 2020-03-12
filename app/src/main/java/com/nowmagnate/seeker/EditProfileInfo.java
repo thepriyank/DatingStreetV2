@@ -26,13 +26,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.nowmagnate.seeker.adapters.ChooseTraits;
+import com.nowmagnate.seeker.adapters.PersonalityTraitsAdapter;
 import com.nowmagnate.seeker.util.GradientStatusBar;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-public class EditProfileInfo extends AppCompatActivity  {
+public class EditProfileInfo extends AppCompatActivity implements ChooseTraits {
 
     //toolbar Views
     private TextView toolbarTitle;
@@ -96,6 +98,7 @@ public class EditProfileInfo extends AppCompatActivity  {
             }
         });
 
+        setPersonalityTraits();
         initSpinner();
         fillUserDetails(user.getUid());
         //initUI();
@@ -128,10 +131,10 @@ public class EditProfileInfo extends AppCompatActivity  {
                         profileName.setText(map.get("name").toString());
                     }
                     if(map.get("height_feet")!=null){
-                        heightFeet.setText("Height:"+map.get("height_feet").toString());
+                        heightFeet.setText(map.get("height_feet").toString());
                     }
                     if(map.get("height_inch")!=null){
-                        heightInch.setText("Height:"+map.get("height_inch").toString());
+                        heightInch.setText(map.get("height_inch").toString());
                     }
                     if(map.get("about")!=null){
                         aboutMe.setText(map.get("about").toString());
@@ -148,7 +151,18 @@ public class EditProfileInfo extends AppCompatActivity  {
 
                     if(map.get("traits")!=null){
                         String traits[] = map.get("traits").toString().split(",");
-                        setPersonalityTraits(traits);
+                        for(int i=0; i<traits.length; ++i){
+                            for(int j=0; j<personalityTraits.size(); ++j){
+                                if(personalityTraits.get(j).getTrait().equals(traits[i])){
+                                    personalityTraits.get(j).setChosen(true);
+                                }
+                            }
+                        }
+                        rvTraits.setHasFixedSize(true);
+                        //rvTraits.setLayoutManager(new LinearLayoutManager(getApplicationContext(),RecyclerView.VERTICAL,false));
+                        gridLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
+                        rvTraits.setLayoutManager(gridLayoutManager);
+                        rvTraits.setAdapter(new PersonalityTraitsAdapter(getApplicationContext(),personalityTraits, EditProfileInfo.this));
                     }
 
 //                    if(map.get("profileImageUrl")!=null){
@@ -190,7 +204,10 @@ public class EditProfileInfo extends AppCompatActivity  {
 
     }
 
-    private void setPersonalityTraits(String values[]) {
+    private void setPersonalityTraits() {
+        String values[] = {"ambitious", "confident","dependable","dominant","energetic","enthusiastic","impatient","impulsive","insecure",
+                "naive","objective","open minded","optimistic","outgoing","passive","self centered","sensitive","tolerant","mature","honest",
+                "loyal","independent","empathetic","humorous","affectionate","integrity","consistent","kind","curious","trustworthy","friendly"};
 
         for(int i=0;i<values.length;++i){
             personalityTraits.add(new PersonalityTraits(values[i],false));
@@ -199,7 +216,7 @@ public class EditProfileInfo extends AppCompatActivity  {
         //rvTraits.setLayoutManager(new LinearLayoutManager(getApplicationContext(),RecyclerView.VERTICAL,false));
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
         rvTraits.setLayoutManager(gridLayoutManager);
-        rvTraits.setAdapter(new UserViewPersonalityAdapter(getApplicationContext(),personalityTraits));
+        rvTraits.setAdapter(new PersonalityTraitsAdapter(getApplicationContext(),personalityTraits, EditProfileInfo.this));
     }
 
     @Override
@@ -267,6 +284,16 @@ public class EditProfileInfo extends AppCompatActivity  {
 
         if(isAllFieldsClear){
 
+            String traits = "";
+
+            for(int i=0; i<personalityTraits.size();++i){
+                if(personalityTraits.get(i).getChosen()) {
+                    if(traits.equals(""))
+                        traits += personalityTraits.get(i).getTrait();
+                    else
+                        traits = traits + "," + personalityTraits.get(i).getTrait();
+                }
+            }
 
             if(profileName.getText().toString().isEmpty()){
                 UserProfile.put("name",user.getDisplayName());}
@@ -276,6 +303,8 @@ public class EditProfileInfo extends AppCompatActivity  {
             UserProfile.put("about",aboutMe.getText().toString());
             UserProfile.put("height_feet",heightFeet.getText().toString());
             UserProfile.put("height_inch",heightInch.getText().toString());
+            UserProfile.put("traits",traits);
+//            UserProfile.put("location",location.getText().toString());
             UserProfile.put("current_profession",String.valueOf(prof_spinner.getSelectedItemId()));
             UserProfile.put("highest_edu",String.valueOf(edu_spinner.getSelectedItemId()));
 
@@ -290,95 +319,95 @@ public class EditProfileInfo extends AppCompatActivity  {
 
     }
 
-    public void initUI(){
-        ref = ref.child(user.getUid());
-        ref.child("name").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null) {
-                    profileName.setText(dataSnapshot.getValue().toString());
-                    isAllFieldsUpdated = true;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-        ref.child("current_profession").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null) {
-                    //spinner display
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        ref.child("highest_edu").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null) {
-                //spinner display
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        ref.child("height_feet").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null) {
-                heightFeet.setText(dataSnapshot.getValue().toString());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        ref.child("height_inch").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null) {
-                heightInch.setText(dataSnapshot.getValue().toString());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        ref.child("about").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null) {
-                aboutMe.setText(dataSnapshot.getValue().toString());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    public void initUI(){
+//        ref = ref.child(user.getUid());
+//        ref.child("name").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.getValue()!=null) {
+//                    profileName.setText(dataSnapshot.getValue().toString());
+//                    isAllFieldsUpdated = true;
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//
+//
+//        ref.child("current_profession").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.getValue()!=null) {
+//                    //spinner display
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        ref.child("highest_edu").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.getValue()!=null) {
+//                //spinner display
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        ref.child("height_feet").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.getValue()!=null) {
+//                heightFeet.setText(dataSnapshot.getValue().toString());
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        ref.child("height_inch").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.getValue()!=null) {
+//                heightInch.setText(dataSnapshot.getValue().toString());
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        ref.child("about").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.getValue()!=null) {
+//                aboutMe.setText(dataSnapshot.getValue().toString());
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     public void popToast(String s){
         if(s == null) {
@@ -388,4 +417,8 @@ public class EditProfileInfo extends AppCompatActivity  {
         }
     }
 
+    @Override
+    public void onItemChange(Vector<PersonalityTraits> traits) {
+        personalityTraits=traits;
+    }
 }
