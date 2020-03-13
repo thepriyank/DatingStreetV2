@@ -96,6 +96,9 @@ public class ChatActivity extends AppCompatActivity {
         mSendEditText = findViewById(R.id.message);
         mSendButton = findViewById(R.id.send);
 
+        Glide.with(ChatActivity.this).load(R.drawable.ic_profile)
+                .apply(RequestOptions.circleCropTransform()).into(ivDp);
+
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,10 +195,12 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     if(dataSnapshot.child("UserInfo").child("profileImageUrl").getValue()!=null){
                         profileImageUrl = dataSnapshot.child("UserInfo").child("profileImageUrl").getValue().toString();
+                        if(!profileImageUrl.equals("default"))
+                        Glide.with(ChatActivity.this).load(profileImageUrl)
+                                .apply(RequestOptions.circleCropTransform()).into(ivDp);
+
                     }
                     userName.setText(name);
-                    Glide.with(ChatActivity.this).load(profileImageUrl.equals("")?(R.drawable.ic_profile):profileImageUrl)
-                            .apply(RequestOptions.circleCropTransform()).into(ivDp);
                 }
             }
 

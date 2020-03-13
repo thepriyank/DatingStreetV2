@@ -50,6 +50,7 @@ public class CardsFragment extends Fragment {
     private TextView datingText;
     private TextView streetText;
     private String currentUId="";
+    Boolean isEmpty=false;
 
     int countCards =0;
     List<cards> rowItems;
@@ -81,6 +82,10 @@ public class CardsFragment extends Fragment {
         checkForUpdates();
         checkUserSex();
 
+        acceptFAB.setVisibility(View.VISIBLE);
+        rejectFAB.setVisibility(View.VISIBLE);
+        rewindFAB.setVisibility(View.VISIBLE);
+        superFAB.setVisibility(View.VISIBLE);
 
         rowItems = new ArrayList<>();
         arrayAdapter = new arrayAdapter(getActivity(), R.layout.card_item, rowItems );
@@ -125,17 +130,12 @@ public class CardsFragment extends Fragment {
 
             @Override
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                Toast.makeText(getActivity(), "Inside Adapter Empty Method ItemCount:"+itemsInAdapter, Toast.LENGTH_SHORT).show();
-                if(itemsInAdapter==0){
+                if(itemsInAdapter==0 && !isEmpty){
                     acceptFAB.setVisibility(View.GONE);
                     rejectFAB.setVisibility(View.GONE);
                     rewindFAB.setVisibility(View.GONE);
                     superFAB.setVisibility(View.GONE);
-                }else{
-                    acceptFAB.setVisibility(View.VISIBLE);
-                    rejectFAB.setVisibility(View.VISIBLE);
-                    rewindFAB.setVisibility(View.VISIBLE);
-                    superFAB.setVisibility(View.VISIBLE);
+                    isEmpty=true;
                 }
             }
 
