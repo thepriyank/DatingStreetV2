@@ -86,6 +86,11 @@ public class CardsFragment extends Fragment {
         swipeView.setVisibility(View.GONE);
         currentUId = mAuth.getCurrentUser().getUid();
 
+        acceptFAB.setVisibility(View.GONE);
+        rejectFAB.setVisibility(View.GONE);
+        rewindFAB.setVisibility(View.GONE);
+        superFAB.setVisibility(View.GONE);
+
         getUserInfo();
         checkForUpdates();
         checkUserSex();
@@ -275,18 +280,71 @@ public class CardsFragment extends Fragment {
         superFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cards obj = rowItems.get(0);
-                String userId = obj.getUserId();
-                ref.child(userId).child("connections").child("yeps").child(currentUId).setValue(true);
-                ref.child(userId).child("connections").child("super").child(currentUId).setValue(true);
-                ref.child(userId).child("superLikes").setValue(--CurrentSuperLikes);
+                if(rowItems.size()>0) {
+                    isSuperLikeClick = true;
+                    if(CurrentSuperLikes>0) {
+                        ref.child(user.getUid()).child("activePlan").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getValue() == null) {
+                                    //add the dialog
+                                } else {
+                                    if (!dataSnapshot.getValue().toString().equals("basic")) {
+                                        ref.child(user.getUid()).child("superLikes").addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot.getValue() == null) {
+                                                    Map s = new HashMap();
+                                                    s.put("superLikes", 4);
+                                                    ref.child(user.getUid()).updateChildren(s);
+                                                    Toast.makeText(getContext(), 4 + " Superlikes left.", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    if (Integer.parseInt(dataSnapshot.getValue().toString()) != 0) {
 
-                isConnectionMatch(userId);
-                rowItems.remove(0);
-                arrayAdapter.notifyDataSetChanged();
-                countCards++;
-                if(countCards%10==0)
-                    displayInterstitialAd();
+                                                        if (isSuperLikeClick) {
+                                                            isSuperLikeClick = false;
+                                                            Map s = new HashMap();
+                                                            s.put("superLikes", Integer.parseInt(dataSnapshot.getValue().toString()) - 1);
+                                                            ref.child(user.getUid()).updateChildren(s);
+                                                            Toast.makeText(getContext(), Integer.parseInt(dataSnapshot.getValue().toString()) - 1 + " Superlikes left.", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    } else {
+                                                        isSuperLikeClick = false;
+                                                        Toast.makeText(getContext(), "You used all Superlikes!", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    cards obj = rowItems.get(0);
+                                                    String userId = obj.getUserId();
+                                                    ref.child(userId).child("connections").child("yeps").child(currentUId).setValue(true);
+                                                    ref.child(userId).child("connections").child("super").child(currentUId).setValue(true);
+                                                    ref.child(userId).child("superLikes").setValue(--CurrentSuperLikes);
+
+                                                    isConnectionMatch(userId);
+                                                    rowItems.remove(0);
+                                                    arrayAdapter.notifyDataSetChanged();
+                                                    countCards++;
+                                                    if (countCards % 10 == 0)
+                                                        displayInterstitialAd();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    } else {
+                                        ((MainActivity) getContext()).showPayLayout(true);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
             }
         });
 
