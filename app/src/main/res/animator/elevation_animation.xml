@@ -9,5 +9,6 @@
         <objectAnimator android:duration="@android:integer/config_shortAnimTime"
             android:propertyName="translationZ" android:valueTo="1.5dp"
             android:valueType="floatType" />
+
     </item>
 </selector>
