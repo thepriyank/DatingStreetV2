@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.nowmagnate.seeker.MatchesObject;
 import com.nowmagnate.seeker.R;
 import com.nowmagnate.seeker.adapters.BlankListAdapter;
-import com.nowmagnate.seeker.adapters.ChatListAdapter;
+import com.nowmagnate.seeker.Chat.ChatListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,8 +81,8 @@ public class ChatsFragment extends Fragment {
                     if(dataSnapshot.child("name").getValue()!=null){
                         name = dataSnapshot.child("name").getValue().toString();
                     }
-                    if(dataSnapshot.child("profileImageUrl").getValue()!=null){
-                        profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+                    if(dataSnapshot.child("UserInfo").child("profileImageUrl").getValue()!=null){
+                        profileImageUrl = dataSnapshot.child("UserInfo").child("profileImageUrl").getValue().toString();
                     }
 
 

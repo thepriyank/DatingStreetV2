@@ -19,23 +19,23 @@ import com.nowmagnate.seeker.UseCoins;
 
 public class CoinsFragment extends Fragment {
 
-    private TextView datingText;
-    private TextView streetText;
-
     private CardView useCard;
     private CardView earnCard;
     private CardView buyCard;
+    private TextView tvCoinsValue;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_coins, container, false);
-
+         TextView datingText;
+         TextView streetText;
         datingText = view.findViewById(R.id.dating_text);
         streetText = view.findViewById(R.id.street_text);
         useCard = view.findViewById(R.id.use_card);
         earnCard = view.findViewById(R.id.earn_card);
         buyCard = view.findViewById(R.id.buy_card);
+        tvCoinsValue = view.findViewById(R.id.tvCoinsValue);
 
         datingText.setVisibility(View.GONE);
         streetText.setText("COINS");

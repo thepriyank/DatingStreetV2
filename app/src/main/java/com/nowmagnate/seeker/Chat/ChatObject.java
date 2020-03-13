@@ -1,4 +1,4 @@
-package com.nowmagnate.seeker.adapters;
+package com.nowmagnate.seeker.Chat;
 
 public class ChatObject {
     private String message;

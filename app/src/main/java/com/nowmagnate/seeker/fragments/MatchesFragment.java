@@ -82,8 +82,8 @@ public class MatchesFragment extends Fragment {
                     if(dataSnapshot.child("name").getValue()!=null){
                         name = dataSnapshot.child("name").getValue().toString();
                     }
-                    if(dataSnapshot.child("profileImageUrl").getValue()!=null){
-                        profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+                    if(dataSnapshot.child("UserInfo").child("profileImageUrl").getValue()!=null){
+                        profileImageUrl = dataSnapshot.child("UserInfo").child("profileImageUrl").getValue().toString();
                     }
 
 

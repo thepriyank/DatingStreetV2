@@ -1,4 +1,4 @@
-package com.nowmagnate.seeker.adapters;
+package com.nowmagnate.seeker.Chat;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -41,6 +41,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListViewHolders>{
         holder.mMatchName.setText(matchesList.get(position).getName());
         if(!matchesList.get(position).getProfileImageUrl().equals("default")){
             Glide.with(context).load(matchesList.get(position).getProfileImageUrl())
+                    .apply(RequestOptions.circleCropTransform()).into(holder.mMatchImage);
+        }else{
+            Glide.with(context).load(R.drawable.ic_profile)
                     .apply(RequestOptions.circleCropTransform()).into(holder.mMatchImage);
         }
     }

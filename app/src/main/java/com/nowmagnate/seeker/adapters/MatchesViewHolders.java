@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.nowmagnate.seeker.Chat.ChatActivity;
 import com.nowmagnate.seeker.ProfileDetail;
 import com.nowmagnate.seeker.R;
 
@@ -31,11 +32,11 @@ public class MatchesViewHolders extends RecyclerView.ViewHolder implements View.
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tvChatUser:
-//                Intent intent = new Intent(view.getContext(), ChatActivity.class);
-//                Bundle b = new Bundle();
-//                b.putString("matchId", mMatchId.getText().toString());
-//                intent.putExtras(b);
-//                view.getContext().startActivity(intent);
+                Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                Bundle b = new Bundle();
+                b.putString("matchId", mMatchId);
+                intent.putExtras(b);
+                view.getContext().startActivity(intent);
                 break;
             case R.id.tvViewUser:
                 Intent viewIntent = new Intent(view.getContext(), ProfileDetail.class);

@@ -1,4 +1,4 @@
-package com.nowmagnate.seeker;
+package com.nowmagnate.seeker.Chat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +25,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.nowmagnate.seeker.adapters.ChatObject;
+import com.nowmagnate.seeker.R;
+import com.nowmagnate.seeker.VideoCallActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -189,11 +190,11 @@ public class ChatActivity extends AppCompatActivity {
                     if(dataSnapshot.child("name").getValue()!=null){
                         name = dataSnapshot.child("name").getValue().toString();
                     }
-                    if(dataSnapshot.child("profileImageUrl").getValue()!=null){
-                        profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+                    if(dataSnapshot.child("UserInfo").child("profileImageUrl").getValue()!=null){
+                        profileImageUrl = dataSnapshot.child("UserInfo").child("profileImageUrl").getValue().toString();
                     }
                     userName.setText(name);
-                    Glide.with(ChatActivity.this).load(profileImageUrl)
+                    Glide.with(ChatActivity.this).load(profileImageUrl.equals("")?(R.drawable.ic_profile):profileImageUrl)
                             .apply(RequestOptions.circleCropTransform()).into(ivDp);
                 }
             }

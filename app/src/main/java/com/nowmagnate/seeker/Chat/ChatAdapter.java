@@ -1,4 +1,4 @@
-package com.nowmagnate.seeker;
+package com.nowmagnate.seeker.Chat;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,9 +9,13 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.nowmagnate.seeker.adapters.ChatObject;
+import com.nowmagnate.seeker.R;
 
 import java.util.List;
+
+/**
+ * Created by manel on 10/31/2017.
+ */
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolders>{
     private List<ChatObject> chatList;

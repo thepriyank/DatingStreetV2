@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.nowmagnate.seeker.Chat.ChatActivity;
 import com.nowmagnate.seeker.MatchesObject;
 import com.nowmagnate.seeker.ProfileDetail;
 import com.nowmagnate.seeker.R;
@@ -39,8 +40,10 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesViewHolders>{
     public void onBindViewHolder(final MatchesViewHolders holder, int position) {
         holder.mMatchId = matchesList.get(position).getUserId();
         holder.mMatchName.setText(matchesList.get(position).getName());
-        if(!matchesList.get(position).getProfileImageUrl().equals("default")){
+        if(!matchesList.get(position).getProfileImageUrl().equals("default")) {
             Glide.with(context).load(matchesList.get(position).getProfileImageUrl())
+                    .into(holder.mMatchImage);
+        }else{   Glide.with(context).load(R.drawable.ic_profile)
                     .into(holder.mMatchImage);
         }
         holder.mViewUser.setOnClickListener(new View.OnClickListener() {
@@ -51,16 +54,16 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesViewHolders>{
                 view.getContext().startActivity(viewIntent);
             }
         });
-//        holder.mChatUser.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(view.getContext(), ChatActivity.class);
-//                Bundle b = new Bundle();
-//                b.putString("matchId", holder.mMatchId.getText().toString());
-//                intent.putExtras(b);
-//                view.getContext().startActivity(intent);
-//            }
-//        });
+        holder.mChatUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                Bundle b = new Bundle();
+                b.putString("matchId", holder.mMatchId);
+                intent.putExtras(b);
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override

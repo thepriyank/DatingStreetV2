@@ -124,6 +124,7 @@
                     android:layout_marginBottom="10dp"
                     android:text=""
                     android:textSize="20sp"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/verifiedImage"
                     app:layout_constraintStart_toStartOf="@+id/cardView2"
@@ -137,21 +138,22 @@
                     android:layout_marginBottom="10dp"
                     android:text=""
                     android:textSize="20sp"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/verifiedImage"
                     app:layout_constraintStart_toStartOf="@+id/cardView2"
                     app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
-                <ImageView
-                    android:id="@+id/verifiedImage"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/ic_check_verified"
-                    app:layout_constraintBottom_toBottomOf="@+id/accountName"
-                    app:layout_constraintEnd_toEndOf="@+id/cardView2"
-                    app:layout_constraintStart_toEndOf="@+id/cardView2"
-                    app:layout_constraintTop_toTopOf="@+id/accountName"
-                    app:layout_constraintVertical_bias="1.0" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/verifiedImage"-->
+<!--                    android:layout_width="28dp"-->
+<!--                    android:layout_height="28dp"-->
+<!--                    android:src="@drawable/ic_check_verified"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@+id/accountName"-->
+<!--                    app:layout_constraintEnd_toEndOf="@+id/cardView2"-->
+<!--                    app:layout_constraintStart_toEndOf="@+id/cardView2"-->
+<!--                    app:layout_constraintTop_toTopOf="@+id/accountName"-->
+<!--                    app:layout_constraintVertical_bias="1.0" />-->
 
             </LinearLayout>
 

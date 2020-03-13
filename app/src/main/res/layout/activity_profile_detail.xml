@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,308 +9,221 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:layout_above="@id/llFabs"
+        android:id="@+id/scrollView">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:padding="16dp"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/profileImagesViewpager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                android:layout_height="300dp"
+                android:layout_marginTop="16dp">
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/viewpagerIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tabGravity="center"
+                    android:layout_gravity="center_horizontal|bottom"
+                    app:tabBackground="@drawable/dot_selector"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabRippleColor="@null"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+            </androidx.viewpager.widget.ViewPager>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="80dp">
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/profileImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="400dp"
-                        android:background="#eeeeee"
-                        android:src="@drawable/account"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
+                    android:layout_height="match_parent"
+                    android:padding="16dp"
+                    android:orientation="vertical">
                     <LinearLayout
-                        android:id="@+id/linearLayout4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/gradient_black_alpha"
-                        android:orientation="vertical"
-                        android:weightSum="3"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent">
+                        android:padding="8dp"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:id="@+id/tvUsername"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_weight="1"
-                            android:text="Name, 20"
-                            android:textColor="#ffffff"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:text="Name ,"
+                            android:textSize="24dp"/>
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:id="@+id/tvUserAge"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:layout_weight="3"
-                            android:text="Location"
-                            android:textColor="#ffffff"
-                            android:textSize="16sp" />
-
+                            android:textStyle="bold"
+                            android:text=" Age: NA"
+                            android:textSize="18dp"/>
 
                     </LinearLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/tvUserSex"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/fancy_button"
+                            android:padding="5dp"
+                            android:textColor="@color/colorWhite"
+                            android:layout_marginLeft="8dp"
+                            android:text="Female"/>
 
-            </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:id="@+id/tvUserHeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/fancy_button"
+                            android:padding="5dp"
+                            android:textColor="@color/colorWhite"
+                            android:layout_marginLeft="8dp"
+                            android:text="Height:NA"/>
+                    </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="Name, 20"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/TextColor"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/ic_location_on_black_24dp"/>
+                        <TextView
+                            android:id="@+id/tvUserLoctaion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp"
+                            android:text="NA"/>
+                    </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:cardBackgroundColor="@color/SelectColor"
-                    app:cardCornerRadius="18dp"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    app:layout_constraintBottom_toBottomOf="@+id/personality_unselected"
-                    app:layout_constraintStart_toEndOf="@+id/personality_unselected"
-                    app:layout_constraintTop_toTopOf="@+id/personality_unselected">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edittext_border"
+                        android:layout_marginTop="8dp"
+                        android:padding="8dp"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_about"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="About Me"
+                            android:textSize="18dp"/>
+                    </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tvUserBio"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="Male"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:textColor="@color/TextColor"
-                        android:textSize="16sp" />
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:text="Not Added" />
 
-                </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edittext_border"
+                        android:layout_marginTop="8dp"
+                        android:padding="8dp"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_work_black_24dp"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Profession"
+                            android:textSize="18dp"/>
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvUserProfession"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Not Added"
+                        android:paddingLeft="16dp"/>
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    app:cardBackgroundColor="@color/SelectColor"
-                    app:cardCornerRadius="18dp"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    app:layout_constraintBottom_toBottomOf="@+id/personality_unselected"
-                    app:layout_constraintStart_toEndOf="@+id/personality_unselected"
-                    app:layout_constraintTop_toTopOf="@+id/personality_unselected">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edittext_border"
+                        android:layout_marginTop="8dp"
+                        android:padding="8dp"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_school_black_24dp"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Education"
+                            android:textSize="18dp"/>
+                    </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tvUserEducation"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="Height 5.6"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:textColor="@color/TextColor"
-                        android:textSize="16sp" />
+                        android:layout_height="wrap_content"
+                        android:text="Not Added"
+                        android:paddingLeft="16dp"/>
 
-                </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edittext_border"
+                        android:layout_marginTop="8dp"
+                        android:padding="8dp"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_face"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Personality"
+                            android:textSize="18dp"/>
+                    </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_margin="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_location_on_black_24dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="Location"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="2.5dp"
-            android:background="@drawable/edittext_all_round_background"
-            android:layout_margin="10dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2.5dp"
-                android:src="@drawable/ic_location_on_black_24dp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:text="About me"/>
-
-        </LinearLayout>
-
-            <TextView
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Place Holder"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingStart="2.5dp"
-                android:background="@drawable/edittext_all_round_background"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="2.5dp"
-                    android:src="@drawable/ic_work_black_24dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textSize="16sp"
-                    android:text="Profession"/>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingStart="2.5dp"
-                android:background="@drawable/edittext_all_round_background"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="2.5dp"
-                    android:src="@drawable/ic_school_black_24dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textSize="16sp"
-                    android:text="Education"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingStart="2.5dp"
-                android:background="@drawable/edittext_all_round_background"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="2.5dp"
-                    android:src="@drawable/ic_sentiment_very_satisfied_black_24dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textSize="16sp"
-                    android:text="Personality"/>
-
-            </LinearLayout>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/personality_selected"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                app:cardBackgroundColor="@color/SelectColor"
-                app:cardCornerRadius="18dp"
-                android:layout_marginBottom="76dp"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:layout_constraintBottom_toBottomOf="@+id/personality_unselected"
-                app:layout_constraintStart_toEndOf="@+id/personality_unselected"
-                app:layout_constraintTop_toTopOf="@+id/personality_unselected">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="Place Holder"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:textColor="@color/TextColor"
-                    android:textSize="16sp" />
-
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvTraits"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"/>
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+
         </LinearLayout>
-
-
     </androidx.core.widget.NestedScrollView>
-
     <LinearLayout
+        android:id="@+id/llFabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/gradient_black_alpha"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -322,9 +235,16 @@
             android:backgroundTint="#ffffff"
             android:src="@drawable/fab_reject"
             app:borderWidth="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/rewindFab"
-            app:layout_constraintTop_toTopOf="@+id/rewindFab"
+            app:tint="@null" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/superFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:backgroundTint="#ffffff"
+            android:src="@drawable/fab_star"
+            app:borderWidth="0dp"
             app:tint="@null" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -335,11 +255,8 @@
             android:backgroundTint="#ffffff"
             android:src="@drawable/fab_heart"
             app:borderWidth="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/superFab"
-            app:layout_constraintTop_toTopOf="@+id/superFab"
             app:tint="@null" />
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

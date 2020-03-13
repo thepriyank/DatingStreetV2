@@ -39,6 +39,7 @@
         <activity android:name="com.nowmagnate.seeker.Settings" />
         <activity android:name="com.nowmagnate.seeker.AccountSecurity" />
         <activity android:name="com.nowmagnate.seeker.MainActivity" />
+        <activity android:name="com.nowmagnate.seeker.Chat.ChatActivity" />
     </application>
 
 </manifest>
