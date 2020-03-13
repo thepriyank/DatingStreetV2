@@ -52,6 +52,7 @@ public class CardsFragment extends Fragment {
     private TextView streetText;
     private String currentUId="";
     Boolean isEmpty=false;
+    Integer CurrentSuperLikes;
 
     int countCards =0;
     List<cards> rowItems;
@@ -89,11 +90,6 @@ public class CardsFragment extends Fragment {
         checkForUpdates();
         checkUserSex();
 
-        acceptFAB.setVisibility(View.VISIBLE);
-        rejectFAB.setVisibility(View.VISIBLE);
-        rewindFAB.setVisibility(View.VISIBLE);
-        superFAB.setVisibility(View.VISIBLE);
-
         rowItems = new ArrayList<>();
         arrayAdapter = new arrayAdapter(getActivity(), R.layout.card_item, rowItems );
 
@@ -113,7 +109,7 @@ public class CardsFragment extends Fragment {
                 cards obj = (cards) dataObject;
                 String userId = obj.getUserId();
                 ref.child(userId).child("connections").child("nope").child(currentUId).setValue(true);
-            Toast.makeText(getActivity(), "Left", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Left", Toast.LENGTH_SHORT).show();
                 countCards++;
                 if(countCards%10==0) {
 //                    displayInterstitialAd();
@@ -127,7 +123,7 @@ public class CardsFragment extends Fragment {
                 String userId = obj.getUserId();
                 ref.child(userId).child("connections").child("yeps").child(currentUId).setValue(true);
                 isConnectionMatch(userId);
-                Toast.makeText(getActivity(), "Right", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Right", Toast.LENGTH_SHORT).show();
                 countCards++;
                 if(countCards%10==0) {
 //                    displayInterstitialAd();
@@ -166,58 +162,56 @@ public class CardsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 isSuperLikeClick = true;
-                ref.child(user.getUid()).child("activePlan").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.getValue()==null){
-                            //add the dialog
-                        }
-                        else{
-                            if(!dataSnapshot.getValue().toString().equals("basic")){
-                                ref.child(user.getUid()).child("superLikes").addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if(dataSnapshot.getValue()==null){
-                                            Map s = new HashMap();
-                                            s.put("superLikes",4);
-                                            ref.child(user.getUid()).updateChildren(s);
-                                            Toast.makeText(getContext(),4+" Superlikes left.",Toast.LENGTH_SHORT).show();
-                                        }
-                                        else{
-                                            if(Integer.parseInt(dataSnapshot.getValue().toString())!=0){
+                if(CurrentSuperLikes>0) {
+                    ref.child(user.getUid()).child("activePlan").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() == null) {
+                                //add the dialog
+                            } else {
+                                if (!dataSnapshot.getValue().toString().equals("basic")) {
+                                    ref.child(user.getUid()).child("superLikes").addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.getValue() == null) {
+                                                Map s = new HashMap();
+                                                s.put("superLikes", 4);
+                                                ref.child(user.getUid()).updateChildren(s);
+                                                Toast.makeText(getContext(), 4 + " Superlikes left.", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                if (Integer.parseInt(dataSnapshot.getValue().toString()) != 0) {
 
-                                                if(isSuperLikeClick) {
+                                                    if (isSuperLikeClick) {
+                                                        isSuperLikeClick = false;
+                                                        Map s = new HashMap();
+                                                        s.put("superLikes", Integer.parseInt(dataSnapshot.getValue().toString()) - 1);
+                                                        ref.child(user.getUid()).updateChildren(s);
+                                                        Toast.makeText(getContext(), Integer.parseInt(dataSnapshot.getValue().toString()) - 1 + " Superlikes left.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                } else {
                                                     isSuperLikeClick = false;
-                                                    Map s = new HashMap();
-                                                    s.put("superLikes", Integer.parseInt(dataSnapshot.getValue().toString()) - 1);
-                                                    ref.child(user.getUid()).updateChildren(s);
-                                                    Toast.makeText(getContext(), Integer.parseInt(dataSnapshot.getValue().toString()) - 1 + " Superlikes left.", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getContext(), "You used all Superlikes!", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
-                                            else{
-                                                isSuperLikeClick = false;
-                                                Toast.makeText(getContext(), "You used all Superlikes!", Toast.LENGTH_SHORT).show();
-                                            }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                    }
-                                });
-                            }
-                            else {
-                                ((MainActivity)getContext()).showPayLayout(true);
+                                        }
+                                    });
+                                } else {
+                                    ((MainActivity) getContext()).showPayLayout(true);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
 
@@ -248,18 +242,66 @@ public class CardsFragment extends Fragment {
             }
         });
 
+
+        rejectFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cards obj = rowItems.get(0);
+                String userId = obj.getUserId();
+                ref.child(userId).child("connections").child("nope").child(currentUId).setValue(true);
+                rowItems.remove(0);
+                arrayAdapter.notifyDataSetChanged();
+                countCards++;
+                if(countCards%10==0)
+                    displayInterstitialAd();
+            }
+        });
+
+        acceptFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cards obj = rowItems.get(0);
+                String userId = obj.getUserId();
+                ref.child(userId).child("connections").child("yeps").child(currentUId).setValue(true);
+                isConnectionMatch(userId);
+                rowItems.remove(0);
+                arrayAdapter.notifyDataSetChanged();
+                countCards++;
+                if(countCards%10==0)
+                    displayInterstitialAd();
+            }
+        });
+
+        superFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cards obj = rowItems.get(0);
+                String userId = obj.getUserId();
+                ref.child(userId).child("connections").child("yeps").child(currentUId).setValue(true);
+                ref.child(userId).child("connections").child("super").child(currentUId).setValue(true);
+                ref.child(userId).child("superLikes").setValue(--CurrentSuperLikes);
+
+                isConnectionMatch(userId);
+                rowItems.remove(0);
+                arrayAdapter.notifyDataSetChanged();
+                countCards++;
+                if(countCards%10==0)
+                    displayInterstitialAd();
+            }
+        });
+
         return view;
     }
 
 
     private void getUserInfo() {
-        ref.child(currentUId).child("UserInfo").addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.child(currentUId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
 
-                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if(map.get("profilecreated")!=null){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.child("UserInfo").getValue();
+                    if(dataSnapshot.child("UserInfo").exists() && map.get("profilecreated")!=null){
                         if(map.get("profilecreated").equals("NO")){
                             // Create a dialog to ask for profile creation to win 5 COINS
                             AlertDialog.Builder builder= new AlertDialog.Builder(getActivity());
@@ -275,6 +317,8 @@ public class CardsFragment extends Fragment {
                                     });
                             AlertDialog dialog = builder.create();
                             dialog.show();
+                        }else{
+                           CurrentSuperLikes = Integer.parseInt(dataSnapshot.child("superLikes").getValue().toString());
                         }
                     }
                 }
@@ -394,6 +438,10 @@ public class CardsFragment extends Fragment {
                         arrayAdapter.notifyDataSetChanged();
                         swipeView.setVisibility(View.VISIBLE);
                         llNoCards.setVisibility(View.GONE);
+                        acceptFAB.setVisibility(View.VISIBLE);
+                        rejectFAB.setVisibility(View.VISIBLE);
+                        rewindFAB.setVisibility(View.VISIBLE);
+                        superFAB.setVisibility(View.VISIBLE);
 
                     }
                 }

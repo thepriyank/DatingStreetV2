@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@drawable/gradient_black_alpha"
+    android:background="@drawable/gradient_red_alpha"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,14 +11,14 @@
         android:gravity="left"
         android:layout_gravity="top"
         android:visibility="visible"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/gradient_red_blue"
         android:padding="8dp"
         android:textSize="24dp"
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/ivDp"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/ic_profile"/>
         <TextView
             android:id="@+id/tvChatname"
@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:text="Username"
             android:layout_weight="1"
+            android:textSize="18sp"
             android:padding="8dp"
             android:layout_gravity="center"
             android:textColor="@color/colorWhite"/>
@@ -76,31 +77,41 @@
             android:backgroundTint="@color/colorWhite"
             android:orientation="horizontal">
             <ImageView
+                android:id="@+id/ivAddEmoji"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_face"/>
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dp"
+                android:maxWidth="0dp"
+                android:maxLines="1"
                 android:background="@color/Transparent"
                 android:layout_weight="1"
                 android:hint="Type here..."
                 android:id="@+id/message"/>
             <ImageView
+                android:id="@+id/ivAddMedia"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_add_photo"/>
         </LinearLayout>
         <ImageButton
-            android:layout_weight="0.2"
+            android:layout_weight="0.12"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:padding="8dp"
-            android:background="@drawable/edittext_border"
-            android:backgroundTint="@color/colorPrimary"
+            android:layout_margin="4dp"
+            android:background="@drawable/gradient_blue_rounded"
             android:src="@drawable/ic_send"
             android:id="@+id/send"/>
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_send"-->
+<!--            android:backgroundTint="@color/colorPrimaryDark"-->
+<!--            android:id="@+id/send"/>-->
     </LinearLayout>
 
 </LinearLayout>
