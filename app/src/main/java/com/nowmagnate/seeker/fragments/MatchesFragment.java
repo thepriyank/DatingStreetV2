@@ -1,5 +1,6 @@
 package com.nowmagnate.seeker.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,31 +21,30 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.nowmagnate.seeker.MatchesObject;
 import com.nowmagnate.seeker.R;
+import com.nowmagnate.seeker.VideoCallActivity;
 import com.nowmagnate.seeker.adapters.BlankListAdapter;
-import com.nowmagnate.seeker.adapters.ChatListAdapter;
+import com.nowmagnate.seeker.adapters.MatchesAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatsFragment extends Fragment {
+public class MatchesFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mMatchesAdapter;
-    private RecyclerView.LayoutManager mMatchesLayoutManager;
+    private GridLayoutManager mMatchesLayoutManager;
     DatabaseReference userRef;
     private String currentUserID, calledBy="";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        View view = inflater.inflate(R.layout.fragment_match, container, false);
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
         currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        mRecyclerView = view.findViewById(R.id.rvChatList);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(true);
-        mMatchesLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mMatchesLayoutManager);
 
         getUserMatchId();
         return view;
@@ -89,12 +90,14 @@ public class ChatsFragment extends Fragment {
                     MatchesObject obj = new MatchesObject(userId, name, profileImageUrl);
                     resultsMatches.add(obj);
                     if(resultsMatches.size()==0){
-                        mMatchesAdapter = new BlankListAdapter(getActivity(),"No Chat Yet.\nStart Swiping to get Matches");
+                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        mMatchesAdapter = new BlankListAdapter(getActivity(),"Each additional swipe is adding odds to your first match. After being matched, you can start chatting here!");
                     }else {
-                        mMatchesAdapter = new ChatListAdapter(getDataSetMatches(), getActivity());
+                        mMatchesLayoutManager = new GridLayoutManager(getActivity(), 2);
+                        mRecyclerView.setLayoutManager(mMatchesLayoutManager);
+                        mMatchesAdapter = new MatchesAdapter(getDataSetMatches(), getActivity());
                     }
                     mRecyclerView.setAdapter(mMatchesAdapter);
-
                     mMatchesAdapter.notifyDataSetChanged();
                 }
             }
@@ -112,5 +115,31 @@ public class ChatsFragment extends Fragment {
         return resultsMatches;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        checkForReceivingCall();
+    }
+
+    private void checkForReceivingCall(){
+        userRef.child(currentUserID).child("Ringing").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild("ringing")){
+                    calledBy = dataSnapshot.child("ringing").getValue().toString();
+
+                    Intent ringIntent = new Intent(getActivity(), VideoCallActivity.class);
+                    ringIntent.putExtra("remote_user", calledBy);
+                    ringIntent.putExtra("type", "receiving");
+                    startActivity(ringIntent);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 }

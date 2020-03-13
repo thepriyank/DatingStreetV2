@@ -2,6 +2,8 @@ package com.nowmagnate.seeker;
 
 import android.app.Application;
 
+//import com.google.android.gms.ads.MobileAds;
+
 public class ThisApplication extends Application {
 
     public static String PlayStore_URL = "https://play.google.com/store/apps/details?id=com.nowmagnate.seeker";

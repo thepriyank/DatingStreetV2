@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VideoCallActivity">
+
+     <FrameLayout
+         android:id="@+id/remoteVideo"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/ivMatchImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile"/>
+         <FrameLayout
+             android:id="@+id/localVideo"
+             android:layout_width="150dp"
+             android:layout_height="200dp"
+             android:background="@drawable/edittext_border"
+             android:layout_gravity="right"
+             android:layout_marginTop="16dp"
+             android:layout_marginEnd="16dp" />
+     </FrameLayout>
+
+    <TextView
+        android:id="@+id/matchName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tvCalling"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24dp"
+        android:gravity="center_horizontal"
+        android:text="UserName"/>
+    <TextView
+        android:id="@+id/tvCalling"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonLayout"
+        android:textSize="24dp"
+        android:gravity="center_horizontal"
+        android:text="Calling..."/>
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+<!--        <ImageButton-->
+<!--            android:id="@+id/btAcceptCall"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="5dp"-->
+<!--            android:visibility="gone"-->
+<!--            android:layout_marginRight="80dp"-->
+<!--            android:background="@drawable/round_background"-->
+<!--            android:backgroundTint="@color/colorLike"-->
+<!--            android:src="@drawable/ic_call"/>-->
+<!--        <ImageButton-->
+<!--            android:id="@+id/btDisconnectCall"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="5dp"-->
+<!--            android:background="@drawable/round_background"-->
+<!--            android:backgroundTint="@color/colorRed"-->
+<!--            android:src="@drawable/ic_call_end"/>-->
+
+    </LinearLayout>
+
+
+</RelativeLayout>

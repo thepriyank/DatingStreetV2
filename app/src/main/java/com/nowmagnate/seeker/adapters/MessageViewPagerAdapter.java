@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.nowmagnate.seeker.fragments.ChatsFragment;
-import com.nowmagnate.seeker.fragments.MatchsFragment;
+import com.nowmagnate.seeker.fragments.MatchesFragment;
 
 public class MessageViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -20,7 +20,7 @@ public class MessageViewPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         if (position == 0)
         {
-            fragment = new MatchsFragment();
+            fragment = new MatchesFragment();
         }
         else if (position == 1)
         {

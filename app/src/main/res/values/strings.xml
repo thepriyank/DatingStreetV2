@@ -1,4 +1,13 @@
 <resources>
+
+    <string name="admob_app_id">ca-app-pub-2087759810041694~2359540384</string>
+    <string name="banner_ad_unit_id">ca-app-pub-2087759810041694/5991308414</string>
+    <string name="test_banner_ad_unit_id">/6499/example/banner</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-2087759810041694/5608165033</string>
+    <string name="test_interstitial_ad_unit_id">/6499/example/interstitial</string>
+    <!--    <string name="rewarded_ad_unit_id"></string> -->
+    <string name="native_ad_unit_id">ca-app-pub-2087759810041694/5033449966</string>
+
     <string name="app_name">Dating Street</string>
     <string name="currentProf">Current Profession</string>
     <string name="highEdu">Highest Eduction</string>
