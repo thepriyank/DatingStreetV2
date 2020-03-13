@@ -9,20 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.nowmagnate.seeker.R;
 
-/**
- * Created by manel on 10/31/2017.
- */
-
 public class ChatViewHolders extends RecyclerView.ViewHolder implements View.OnClickListener{
     public TextView mMessage;
-    public LinearLayout mContainer;
-    public CardView mChatCard;
+    public LinearLayout mContainer , mChatCard;
     public ChatViewHolders(View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
         mMessage = itemView.findViewById(R.id.message);
         mContainer = itemView.findViewById(R.id.container);
-        mChatCard = itemView.findViewById(R.id.cvChatcard);
+        mChatCard = itemView.findViewById(R.id.llChatcard);
     }
 
     @Override

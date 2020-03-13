@@ -13,10 +13,6 @@ import com.nowmagnate.seeker.R;
 
 import java.util.List;
 
-/**
- * Created by manel on 10/31/2017.
- */
-
 public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolders>{
     private List<ChatObject> chatList;
     private Context context;
@@ -42,13 +38,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolders>{
     public void onBindViewHolder(ChatViewHolders holder, int position) {
         holder.mMessage.setText(chatList.get(position).getMessage());
         if(chatList.get(position).getCurrentUser()){
-            holder.mMessage.setTextColor(Color.parseColor("#404040"));
+//            holder.mMessage.setTextColor(Color.parseColor("#404040"));
+            holder.mMessage.setTextColor(context.getResources().getColor(R.color.colorWhite));
             holder.mContainer.setGravity(Gravity.RIGHT);
             holder.mChatCard.setBackgroundResource(R.drawable.outgoing_chat_bubble);
         }else{
-            holder.mMessage.setTextColor(Color.parseColor("#404040"));
+//            holder.mMessage.setTextColor(Color.parseColor("#404040"));
             holder.mContainer.setGravity(Gravity.LEFT);
             holder.mChatCard.setBackgroundResource(R.drawable.incoming_chat_bubble);
+            holder.mMessage.setTextColor(context.getResources().getColor(R.color.colorBlack));
+
         }
     }
 

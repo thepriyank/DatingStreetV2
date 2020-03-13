@@ -13,10 +13,6 @@ import com.nowmagnate.seeker.R;
 
 import java.util.List;
 
-/**
- * Created by manel on 9/5/2017.
- */
-
 public class arrayAdapter extends ArrayAdapter<cards> {
 
     Context context;

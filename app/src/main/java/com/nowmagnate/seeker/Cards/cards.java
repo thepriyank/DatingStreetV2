@@ -1,9 +1,5 @@
 package com.nowmagnate.seeker.Cards;
 
-/**
- * Created by manel on 9/5/2017.
- */
-
 public class cards {
     private String userId;
     private String name;
