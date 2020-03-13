@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,13 +36,15 @@ public class MatchesFragment extends Fragment {
     private GridLayoutManager mMatchesLayoutManager;
     DatabaseReference userRef;
     private String currentUserID, calledBy="";
+    LinearLayout llNoMatches;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_match, container, false);
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
         currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+        llNoMatches = view.findViewById(R.id.llNoMatchContent);
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(true);
@@ -57,9 +60,12 @@ public class MatchesFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
+                    llNoMatches.setVisibility(View.GONE);
                     for(DataSnapshot match : dataSnapshot.getChildren()){
                         FetchMatchInformation(match.getKey());
                     }
+                }else{
+                        llNoMatches.setVisibility(View.VISIBLE);
                 }
             }
 

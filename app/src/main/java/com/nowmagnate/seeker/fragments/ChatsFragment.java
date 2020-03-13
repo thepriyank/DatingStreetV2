@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +33,7 @@ public class ChatsFragment extends Fragment {
     private RecyclerView.LayoutManager mMatchesLayoutManager;
     DatabaseReference userRef;
     private String currentUserID, calledBy="";
+    LinearLayout llNoChats;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class ChatsFragment extends Fragment {
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
         currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        llNoChats = view.findViewById(R.id.llNoChatContent);
         mRecyclerView = view.findViewById(R.id.rvChatList);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(true);
@@ -56,9 +59,12 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
+                    llNoChats.setVisibility(View.GONE);
                     for(DataSnapshot match : dataSnapshot.getChildren()){
                         FetchMatchInformation(match.getKey());
                     }
+                }else{
+                    llNoChats.setVisibility(View.VISIBLE);
                 }
             }
 

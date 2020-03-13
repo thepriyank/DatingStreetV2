@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,8 @@ public class CardsFragment extends Fragment {
     int countCards =0;
     List<cards> rowItems;
     private com.nowmagnate.seeker.Cards.arrayAdapter arrayAdapter;
+    LinearLayout llNoCards;
+    SwipeFlingAdapterView swipeView;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
@@ -68,6 +71,8 @@ public class CardsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cards, container, false);
 
+        swipeView = view.findViewById(R.id.frame);
+        llNoCards = view.findViewById(R.id.llNoCardsContent);
         rejectFAB = view.findViewById(R.id.rejectFab);
         acceptFAB = view.findViewById(R.id.acceptFab);
         superFAB = view.findViewById(R.id.superFab);
@@ -76,6 +81,8 @@ public class CardsFragment extends Fragment {
         streetText = view.findViewById(R.id.street_text);
 
 
+        llNoCards.setVisibility(View.VISIBLE);
+        swipeView.setVisibility(View.GONE);
         currentUId = mAuth.getCurrentUser().getUid();
 
         getUserInfo();
@@ -136,6 +143,8 @@ public class CardsFragment extends Fragment {
                     rewindFAB.setVisibility(View.GONE);
                     superFAB.setVisibility(View.GONE);
                     isEmpty=true;
+                    llNoCards.setVisibility(View.VISIBLE);
+                    swipeView.setVisibility(View.GONE);
                 }
             }
 
@@ -152,14 +161,6 @@ public class CardsFragment extends Fragment {
                 startActivityForResult(showUserIntent, 123);
             }
         });
-
-//        flingContainer.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                profileCard.setClickable(false);
-//                startActivity(new Intent(getContext(), ProfileDetail.class));
-//            }
-//        });
 
         superFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -369,11 +370,11 @@ public class CardsFragment extends Fragment {
 
     public void getOppositeSexUsers(){
         ref.addChildEventListener(new ChildEventListener() {
-
+//&& !dataSnapshot.child("connections").child("nope").hasChild(currentUId)
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.child("UserInfo").child("gender").getValue() != null) {
-                    if (dataSnapshot.exists() && !dataSnapshot.child("connections").child("nope").hasChild(currentUId)
+                    if (dataSnapshot.exists()
                             && !dataSnapshot.child("connections").child("yeps").hasChild(currentUId)
                             && dataSnapshot.child("UserInfo").child("gender").getValue().toString().equals(oppositeUserSex)) {
                         String profileImageUrl = "default";
@@ -391,18 +392,9 @@ public class CardsFragment extends Fragment {
                                 name, profileImageUrl);
                         rowItems.add(item);
                         arrayAdapter.notifyDataSetChanged();
-                        Toast.makeText(getActivity(), "Inside User Fetch Method ItemCount:"+rowItems.size(), Toast.LENGTH_SHORT).show();
-                        if(rowItems.size()==0){
-                            acceptFAB.setVisibility(View.GONE);
-                            rejectFAB.setVisibility(View.GONE);
-                            rewindFAB.setVisibility(View.GONE);
-                            superFAB.setVisibility(View.GONE);
-                        }else{
-                            acceptFAB.setVisibility(View.VISIBLE);
-                            rejectFAB.setVisibility(View.VISIBLE);
-                            rewindFAB.setVisibility(View.VISIBLE);
-                            superFAB.setVisibility(View.VISIBLE);
-                        }
+                        swipeView.setVisibility(View.VISIBLE);
+                        llNoCards.setVisibility(View.GONE);
+
                     }
                 }
             }

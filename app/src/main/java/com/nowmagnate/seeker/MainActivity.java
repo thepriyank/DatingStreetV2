@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
         return c.getTime().toString().substring(0,10);
     }
 
-    public long getCurrentTime(){
+    public static long getCurrentTime(){
         Calendar c = Calendar.getInstance();
         return c.getTimeInMillis();
     }

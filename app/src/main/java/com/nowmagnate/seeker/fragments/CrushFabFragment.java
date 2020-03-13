@@ -175,7 +175,7 @@ public class CrushFabFragment extends Fragment {
                 }
                 else if(Boolean.parseBoolean(dataSnapshot.getValue().toString())){
                     CounterEnable = true;
-                    currentTime = ((MainActivity)getContext()).getCurrentTime();
+                    currentTime = MainActivity.getCurrentTime();
                     Long timeDelta = currentTime - counterStartTime;
                     Log.i("timeMin", String.valueOf(TimeUnit.MILLISECONDS.toMinutes(timeDelta)));
                     Log.i("timeSec", String.valueOf(TimeUnit.MILLISECONDS.toSeconds(timeDelta)));
@@ -223,7 +223,7 @@ public class CrushFabFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()){
                     Map time = new HashMap();
-                    currentTime = ((MainActivity)getContext()).getCurrentTime();
+                    currentTime = MainActivity.getCurrentTime();
                     time.put("time",currentTime);
                     ref.updateChildren(time);
                 }
@@ -241,7 +241,7 @@ public class CrushFabFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue()==null){
-                    counterStartTime = ((MainActivity)getContext()).getCurrentTime();
+                    counterStartTime = MainActivity.getCurrentTime();
                     addTimeToDB();
                 }
                 else {
@@ -273,7 +273,7 @@ public class CrushFabFragment extends Fragment {
 
     public void checkDate(){
         ((MainActivity)getContext()).addDateStamp();
-        ref.child("Users").child(user.getUid()).child("init_date").addValueEventListener(new ValueEventListener() {
+        ref.child("init_date").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!((MainActivity)getContext()).getDateStamp().equals(dataSnapshot.getValue())){

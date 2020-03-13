@@ -123,7 +123,6 @@ public class ProfileDetail extends AppCompatActivity {
                         tvName.setText(name +", ");
                     }
                     if(dataSnapshot.child("UserInfo").child("dob")!=null){
-                        Toast.makeText(ProfileDetail.this, dataSnapshot.child("UserInfo").child("dob").getValue().toString(), Toast.LENGTH_SHORT).show();
                         String[] dob= dataSnapshot.child("UserInfo").child("dob").getValue().toString().split("/");
                         tvAge.setText(getAge(Integer.parseInt(dob[2]),Integer.parseInt(dob[0]),Integer.parseInt(dob[1])));
                     }
