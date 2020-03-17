@@ -17,7 +17,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolders>{
     private List<ChatObject> chatList;
     private Context context;
 
-
     public ChatAdapter(List<ChatObject> matchesList, Context context){
         this.chatList = matchesList;
         this.context = context;

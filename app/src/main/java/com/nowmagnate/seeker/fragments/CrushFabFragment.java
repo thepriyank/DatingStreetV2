@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.nowmagnate.seeker.BuyCoins;
 import com.nowmagnate.seeker.MainActivity;
 import com.nowmagnate.seeker.ProfileDetail;
 import com.nowmagnate.seeker.R;
@@ -73,7 +75,15 @@ public class CrushFabFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 profileCard.setClickable(false);
-                startActivity(new Intent(getContext(), ProfileDetail.class));
+                if(isTimerTicking) {
+                    Intent viewIntent = new Intent(getActivity(), ProfileDetail.class);
+                    viewIntent.putExtra("userid", user.getUid());
+                    getActivity().startActivity(viewIntent);
+                    // startActivity(new Intent(getContext(), ProfileDetail.class));
+                }else{
+//                    Toast.makeText(getActivity(), "Go To Buy/Use Coins", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getContext(), BuyCoins.class));
+                }
             }
         });
 
@@ -102,9 +112,6 @@ public class CrushFabFragment extends Fragment {
 
         Counter();
         getCounterStartTime();
-
-
-
         return view;
     }
 
@@ -240,13 +247,13 @@ public class CrushFabFragment extends Fragment {
         ref.child("time").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()==null){
-                    counterStartTime = MainActivity.getCurrentTime();
-                    addTimeToDB();
-                }
-                else {
+                if(dataSnapshot.exists() && dataSnapshot.getValue() != null){
                     counterStartTime = Long.parseLong(dataSnapshot.getValue().toString());
                 }
+                else {
+                    counterStartTime = MainActivity.getCurrentTime();
+                    addTimeToDB();
+                 }
                 Log.i("getCounterStartTime", "called");
                 checkDate();
             }
@@ -276,7 +283,7 @@ public class CrushFabFragment extends Fragment {
         ref.child("init_date").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!((MainActivity)getContext()).getDateStamp().equals(dataSnapshot.getValue())){
+                if(!MainActivity.getDateStamp().equals(dataSnapshot.getValue())){
                     Calendar c = Calendar.getInstance();
                     Log.i("pop", c.getTime().toString().substring(0, 10));
                     Map d = new HashMap();
@@ -285,7 +292,7 @@ public class CrushFabFragment extends Fragment {
 
 
                     Map time = new HashMap();
-                    currentTime = ((MainActivity)getContext()).getCurrentTime();
+                    currentTime = MainActivity.getCurrentTime();
                     time.put("time",currentTime);
                     ref.updateChildren(time);
                     setCounterAvailable(true);

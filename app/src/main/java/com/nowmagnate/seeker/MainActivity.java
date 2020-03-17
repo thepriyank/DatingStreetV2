@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
             }
         });
 
-
         coins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
                 navIconSelected(coins);
             }
         });
-
 
         crushFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
             }
         });
 
-
         messages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
                 navIconSelected(messages);
             }
         });
-
 
         account.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
     public void replaceFragment(Fragment fragment){
 //        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame,
 //                fragment).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame,fragment).commitNow();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame,fragment).commit();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -180,9 +176,7 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
         account.setColorFilter(null);
         crushFab.setColorFilter(null);
 
-
         c.setColorFilter(Color.parseColor("#AB0092FF"));
-
     }
 
     public void fin(){
@@ -219,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
 
     }
 
-    public String getDateStamp(){
+    public static String getDateStamp(){
         Calendar c = Calendar.getInstance();
 
 
