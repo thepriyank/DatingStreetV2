@@ -314,10 +314,11 @@ public class EditProfileInfo extends AppCompatActivity implements ChooseTraits {
             ref.child("Users").child(user.getUid()).child("UserInfo").updateChildren(profilecreation);
 
             isAllFieldsUpdated = true;
-            startActivity(new Intent(EditProfileInfo.this,MainActivity.class));
+
             SharedPreferences.Editor editor = getSharedPreferences("UPDATED", MODE_PRIVATE).edit();
             editor.putBoolean("isUPDATED",true);
             editor.apply();
+            startActivity(new Intent(EditProfileInfo.this,MainActivity.class));
         }
 
     }

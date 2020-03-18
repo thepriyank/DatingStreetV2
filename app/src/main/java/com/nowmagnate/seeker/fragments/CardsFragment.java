@@ -376,7 +376,7 @@ public class CardsFragment extends Fragment {
                             AlertDialog dialog = builder.create();
                             dialog.show();
                         }else{
-                           CurrentSuperLikes = Integer.parseInt(dataSnapshot.child("superLikes").getValue().toString());
+                           CurrentSuperLikes = Integer.parseInt(dataSnapshot.child("UserInfo").child("superLikes").getValue().toString());
                         }
                     }
                 }

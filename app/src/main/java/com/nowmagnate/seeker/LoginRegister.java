@@ -143,6 +143,7 @@ public class LoginRegister extends AppCompatActivity {
 
                     userProfile.put("endPlan",cad.getTime().toString().substring(0,10));
                     userProfile.put("activePlan","basic");
+                    userProfile.put("profilecreated","NO");
                     userProfile.put("superLikes",0);
                     userProfile.put("coins",0);
 
