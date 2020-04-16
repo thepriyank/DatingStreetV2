@@ -29,6 +29,7 @@ import com.nowmagnate.seeker.BuyCoins;
 import com.nowmagnate.seeker.MainActivity;
 import com.nowmagnate.seeker.ProfileDetail;
 import com.nowmagnate.seeker.R;
+import com.nowmagnate.seeker.UseCoins;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -89,6 +90,13 @@ public class CrushFabFragment extends Fragment {
 
         datingText.setVisibility(View.GONE);
         streetText.setText("CRUSH ZONE");
+
+        payLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), UseCoins.class));
+            }
+        });
 
         likeFAB.setOnClickListener(new View.OnClickListener() {
             @Override

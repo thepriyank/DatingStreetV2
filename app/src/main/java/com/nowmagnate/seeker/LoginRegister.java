@@ -76,28 +76,32 @@ public class LoginRegister extends AppCompatActivity {
 
         GradientStatusBar.setStatusBarGradiant(this);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .requestProfile()
-                .build();
-        // [END config_signin]
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .requestProfile()
+                    .build();
+            // [END config_signin]
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // [START initialize_auth]
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-        // [END initialize_auth]
-
-
-        splashScreen.setClickable(true);
-
-        SplashScreenAnim();
+            // [START initialize_auth]
+            // Initialize Firebase Auth
+            mAuth = FirebaseAuth.getInstance();
+            // [END initialize_auth]
 
 
+            splashScreen.setClickable(true);
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            SplashScreenAnim();
+
+
+
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+
+
+
 
         googleCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,11 +151,14 @@ public class LoginRegister extends AppCompatActivity {
                     userProfile.put("superLikes",0);
                     userProfile.put("coins",0);
 
-                    ref.child(user.getUid()).setValue(userProfile);
-//                                .updateChildren(userProfile);
+                        ref.child(user.getUid()).child("UserInfo").setValue(userProfile);
                     startActivity(new Intent(LoginRegister.this,basicInfoActivity.class));
+                    finish();
+//                                .updateChildren(userProfile);
+
                 }else{
                     startActivity(new Intent(LoginRegister.this,MainActivity.class));
+                    finish();
                 }
             }
 
@@ -251,6 +258,7 @@ public class LoginRegister extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
+                            Log.d(TAG, "signInWithCredential:success" +acct.getIdToken());
                             isUserLoggedIn= true;
 
                             onLoginCardClick(acct);
@@ -298,21 +306,23 @@ public class LoginRegister extends AppCompatActivity {
         ref.child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild("UserInfo")){
-                    startActivity(new Intent(LoginRegister.this, MainActivity.class));
-                }
-                else{
-                    Calendar cad = Calendar.getInstance();
-                    cad.add(Calendar.DATE,30);
+                if(mAuth.getCurrentUser()!=null) {
+                    if (dataSnapshot.hasChild("UserInfo")) {
+                        startActivity(new Intent(LoginRegister.this, MainActivity.class));
+                    } else {
+                        Calendar cad = Calendar.getInstance();
+                        cad.add(Calendar.DATE, 30);
 
-                    Map basicInfo = new HashMap();
-                    basicInfo.put("endPlan",cad.getTime().toString().substring(0,10));
-                    basicInfo.put("activePlan","basic");
-                    basicInfo.put("superLikes",0);
-                    basicInfo.put("coins",0);
+                        Map basicInfo = new HashMap();
+                        basicInfo.put("endPlan", cad.getTime().toString().substring(0, 10));
+                        basicInfo.put("activePlan", "basic");
+                        basicInfo.put("superLikes", 0);
+                        basicInfo.put("coins", 0);
 
-                    ref.child(user.getUid()).updateChildren(basicInfo);
-                    startActivity(new Intent(LoginRegister.this,basicInfoActivity.class));
+                            ref.child(user.getUid()).child("UserInfo").updateChildren(basicInfo);
+                        startActivity(new Intent(LoginRegister.this, basicInfoActivity.class));
+                        finish();
+                    }
                 }
 
             }

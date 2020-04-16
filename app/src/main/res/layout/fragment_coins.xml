@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="3dp"
-                android:text="50"
+                android:text=""
                 android:textSize="30sp" />
 
         </LinearLayout>
@@ -180,7 +180,6 @@
         app:layout_constraintTop_toBottomOf="@+id/earn_card" />
 
     <LinearLayout
-        android:id="@+id/linearLayout7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -208,11 +207,11 @@
                     android:layout_height="10dp"
                     android:background="#000" />
 
-
                 <View
                     android:layout_width="2dp"
                     android:layout_height="5dp"
                     android:background="#000" />
+
             </LinearLayout>
 
             <TextView

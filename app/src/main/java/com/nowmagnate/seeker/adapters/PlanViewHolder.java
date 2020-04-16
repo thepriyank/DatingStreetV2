@@ -146,7 +146,7 @@ public class PlanViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
                         Map endPlan = new HashMap();
                         endPlan.put("endPlan",cad.getTime().toString().substring(0,10));
-                        DatabaseReference ref = database.getReference().child("Users").child(user.getUid());
+                        DatabaseReference ref = database.getReference().child("Users").child(user.getUid()).child("UserInfo");
                         ref.updateChildren(plan);
                         ref.updateChildren(endPlan);
                         ref.child("superLikes").setValue(5);

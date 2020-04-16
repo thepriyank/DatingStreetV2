@@ -101,6 +101,7 @@ public class AccountsFragment extends Fragment {
             public void onClick(View v) {
                 disableClick();
                 startActivity(new Intent(getContext(), Settings.class));
+                ((MainActivity)getContext()).fin();
             }
         });
 

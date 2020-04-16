@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.annotation.TargetApi;
@@ -34,6 +35,7 @@ import com.nowmagnate.seeker.fragments.CardsFragment;
 import com.nowmagnate.seeker.fragments.CoinsFragment;
 import com.nowmagnate.seeker.fragments.CrushFabFragment;
 import com.nowmagnate.seeker.fragments.MessagesFragment;
+import com.nowmagnate.seeker.util.NotificationService;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
 
     SharedPreferences preferences;
     Fragment selectedFragment = null;
-    private boolean isTimerTicking = false;
+    private boolean isFirstLaunch;
 
     boolean trap = true;
 
@@ -71,11 +73,18 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
         buyDialog = findViewById(R.id.buyDialog);
         buyPlanCard = findViewById(R.id.buyPlanCard);
 
+        Intent i = getIntent();
+        if(i.getIntExtra("startAccount",0)==1){
+            replaceFragment(new AccountsFragment());
+            navIconSelected(account);
+        }
+
         preferences = getSharedPreferences("UPDATED",MODE_PRIVATE);
         if(preferences.getBoolean("isUPDATED", false)==false){
             //startActivity(new Intent(MainActivity.this,EditProfileInfo.class));
         }
         Log.i("pop", String.valueOf(preferences.getBoolean("isUPDATED",false)));
+
 
 
         cards.setColorFilter(Color.parseColor("#AB0092FF"));
@@ -102,6 +111,11 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
                 showPayLayout(false);
             }
         });
+
+        Intent serviceIntent = new Intent(this, NotificationService
+                .class);
+
+        ContextCompat.startForegroundService(this, serviceIntent);
     }
 
     public void intBottomNavBar(){
@@ -190,28 +204,37 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
     }
 
     public void addDateStamp(){
-        ref.child(user.getUid()).child("init_date").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()==null) {
+        isFirstLaunch = true;
+        if(user!=null) {
+            ref.child(user.getUid()).child("init_date").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Calendar c = Calendar.getInstance();
                     Log.i("pop", c.getTime().toString().substring(0, 10));
                     Map d = new HashMap();
                     d.put("init_date", c.getTime().toString().substring(0, 10));
+                    if (dataSnapshot.getValue() == null) {
 
-                    ref = ref.child(user.getUid());
-                    ref.updateChildren(d);
+                        ref.child(user.getUid()).updateChildren(d);
+                        isFirstLaunch = false;
+                    }
+                    else if(!dataSnapshot.getValue().equals(d)){
+                        Map superLike = new HashMap();
+                        superLike.put("superLikes",5);
+                        ref.child(user.getUid()).child("UserInfo").updateChildren(superLike);
+                        ref.child(user.getUid()).child("UserInfo").updateChildren(d);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-
-
-    }
+                }
+            });
+        }else{
+            startActivity(new Intent(MainActivity.this,LoginRegister.class));
+        }
+        }
 
     public static String getDateStamp(){
         Calendar c = Calendar.getInstance();
@@ -234,21 +257,23 @@ public class MainActivity extends AppCompatActivity implements OnPlanListener {
     }
 
     public void checkPlanEnd(){
-        ref.child(user.getUid()).child("endPlan").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    if(dataSnapshot.getValue().toString().equals(getDateStamp())){
-                        ref.child(user.getUid()).child("activePlan").setValue("basic");
+        if(user!=null) {
+            ref.child(user.getUid()).child("UserInfo").child("endPlan").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        if (dataSnapshot.getValue().toString().equals(getDateStamp())) {
+                            ref.child(user.getUid()).child("UserInfo").child("activePlan").setValue("basic");
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     @Override

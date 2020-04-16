@@ -12,10 +12,11 @@
         android:id="@+id/include"/>
 
     <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
         android:layout_margin="10dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include">
@@ -43,9 +44,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_weight="3"
 
-                    android:layout_weight="3">
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -54,19 +55,20 @@
                         android:layout_marginTop="5dp"
                         android:gravity="left"
                         android:padding="5dp"
-                        android:text="Phone Number"
+                        android:text="Logged in account"
                         android:textColor="@color/TextColor"
                         tools:layout_editor_absoluteX="6dp"
                         tools:layout_editor_absoluteY="483dp" />
 
                     <TextView
+                        android:id="@+id/loggedInAccount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginBottom="5dp"
                         android:gravity="left"
                         android:padding="5dp"
-                        android:text="+91 **********"
+                        android:text=""
                         android:textColor="@color/TextColor"
                         tools:layout_editor_absoluteX="6dp"
                         tools:layout_editor_absoluteY="483dp" />
@@ -90,76 +92,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2.5dp"
-            android:clickable="true"
-
-            android:foreground="?attr/selectableItemBackground"
-            android:stateListAnimator="@animator/elevation_animation"
-            app:cardCornerRadius="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/distance_seekbar"
-            app:layout_constraintStart_toStartOf="@+id/distance_seekbar"
-            app:layout_constraintTop_toBottomOf="@+id/distance_seekbar">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:weightSum="5">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-
-                    android:layout_weight="4">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:gravity="left"
-                    android:padding="5dp"
-                    android:text="Update Your Password"
-                    android:textColor="@color/TextColor"
-                    tools:layout_editor_absoluteX="6dp"
-                    tools:layout_editor_absoluteY="483dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:gravity="left"
-                        android:padding="5dp"
-                        android:text="*****"
-                        android:textColor="@color/TextColor"
-                        tools:layout_editor_absoluteX="6dp"
-                        tools:layout_editor_absoluteY="483dp" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="5dp"
-                    android:paddingRight="20dp"
-                    android:paddingBottom="5dp"
-                    android:text=">"
-                    android:textSize="20sp"
-                    tools:layout_editor_absoluteX="6dp"
-                    tools:layout_editor_absoluteY="483dp" />
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
+            android:id="@+id/deleteAccountCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2.5dp"
@@ -198,6 +131,26 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/deletingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:clickable="true"
+        android:visibility="gone"
+        android:background="#80676767">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -84,7 +84,9 @@ public class CardsFragment extends Fragment {
 
         llNoCards.setVisibility(View.VISIBLE);
         swipeView.setVisibility(View.GONE);
-        currentUId = mAuth.getCurrentUser().getUid();
+        if(mAuth.getCurrentUser() != null) {
+            currentUId = mAuth.getCurrentUser().getUid();
+        }
 
         acceptFAB.setVisibility(View.GONE);
         rejectFAB.setVisibility(View.GONE);
@@ -168,20 +170,20 @@ public class CardsFragment extends Fragment {
             public void onClick(View view) {
                 isSuperLikeClick = true;
                 if(CurrentSuperLikes>0) {
-                    ref.child(user.getUid()).child("activePlan").addValueEventListener(new ValueEventListener() {
+                    ref.child(user.getUid()).child("UserInfo").child("activePlan").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getValue() == null) {
                                 //add the dialog
                             } else {
                                 if (!dataSnapshot.getValue().toString().equals("basic")) {
-                                    ref.child(user.getUid()).child("superLikes").addValueEventListener(new ValueEventListener() {
+                                    ref.child(user.getUid()).child("UserInfo").child("superLikes").addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             if (dataSnapshot.getValue() == null) {
                                                 Map s = new HashMap();
                                                 s.put("superLikes", 4);
-                                                ref.child(user.getUid()).updateChildren(s);
+                                                ref.child(user.getUid()).child("UserInfo").child("UserInfo").updateChildren(s);
                                                 Toast.makeText(getContext(), 4 + " Superlikes left.", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 if (Integer.parseInt(dataSnapshot.getValue().toString()) != 0) {
@@ -190,7 +192,7 @@ public class CardsFragment extends Fragment {
                                                         isSuperLikeClick = false;
                                                         Map s = new HashMap();
                                                         s.put("superLikes", Integer.parseInt(dataSnapshot.getValue().toString()) - 1);
-                                                        ref.child(user.getUid()).updateChildren(s);
+                                                        ref.child(user.getUid()).child("UserInfo").updateChildren(s);
                                                         Toast.makeText(getContext(), Integer.parseInt(dataSnapshot.getValue().toString()) - 1 + " Superlikes left.", Toast.LENGTH_SHORT).show();
                                                     }
                                                 } else {
@@ -283,14 +285,14 @@ public class CardsFragment extends Fragment {
                 if(rowItems.size()>0) {
                     isSuperLikeClick = true;
                     if(CurrentSuperLikes>0) {
-                        ref.child(user.getUid()).child("activePlan").addValueEventListener(new ValueEventListener() {
+                        ref.child(user.getUid()).child("UserInfo").child("activePlan").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.getValue() == null) {
                                     //add the dialog
                                 } else {
                                     if (!dataSnapshot.getValue().toString().equals("basic")) {
-                                        ref.child(user.getUid()).child("superLikes").addValueEventListener(new ValueEventListener() {
+                                        ref.child(user.getUid()).child("UserInfo").child("superLikes").addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 if (dataSnapshot.getValue() == null) {
@@ -306,24 +308,24 @@ public class CardsFragment extends Fragment {
                                                             Map s = new HashMap();
                                                             s.put("superLikes", Integer.parseInt(dataSnapshot.getValue().toString()) - 1);
                                                             ref.child(user.getUid()).updateChildren(s);
+                                                            cards obj = rowItems.get(0);
+                                                            String userId = obj.getUserId();
+                                                            ref.child(userId).child("connections").child("yeps").child(currentUId).setValue(true);
+                                                            ref.child(userId).child("connections").child("super").child(currentUId).setValue(true);
+                                                            ref.child(userId).child("superLikes").setValue(--CurrentSuperLikes);
+
+                                                            isConnectionMatch(userId);
+                                                            rowItems.remove(0);
+                                                            arrayAdapter.notifyDataSetChanged();
+                                                            countCards++;
+                                                            if (countCards % 10 == 0)
+                                                                displayInterstitialAd();
                                                             Toast.makeText(getContext(), Integer.parseInt(dataSnapshot.getValue().toString()) - 1 + " Superlikes left.", Toast.LENGTH_SHORT).show();
                                                         }
                                                     } else {
                                                         isSuperLikeClick = false;
                                                         Toast.makeText(getContext(), "You used all Superlikes!", Toast.LENGTH_SHORT).show();
                                                     }
-                                                    cards obj = rowItems.get(0);
-                                                    String userId = obj.getUserId();
-                                                    ref.child(userId).child("connections").child("yeps").child(currentUId).setValue(true);
-                                                    ref.child(userId).child("connections").child("super").child(currentUId).setValue(true);
-                                                    ref.child(userId).child("superLikes").setValue(--CurrentSuperLikes);
-
-                                                    isConnectionMatch(userId);
-                                                    rowItems.remove(0);
-                                                    arrayAdapter.notifyDataSetChanged();
-                                                    countCards++;
-                                                    if (countCards % 10 == 0)
-                                                        displayInterstitialAd();
                                                 }
                                             }
 
@@ -353,7 +355,7 @@ public class CardsFragment extends Fragment {
 
 
     private void getUserInfo() {
-        ref.child(currentUId).addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.child(currentUId).child("UserInfo").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
@@ -376,7 +378,7 @@ public class CardsFragment extends Fragment {
                             AlertDialog dialog = builder.create();
                             dialog.show();
                         }else{
-                           CurrentSuperLikes = Integer.parseInt(dataSnapshot.child("UserInfo").child("superLikes").getValue().toString());
+                           CurrentSuperLikes = Integer.parseInt(dataSnapshot.child("superLikes").getValue().toString());
                         }
                     }
                 }
@@ -443,31 +445,34 @@ public class CardsFragment extends Fragment {
     private String oppositeUserSex;
 
     public void checkUserSex(){
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference userDb = ref.child(user.getUid()).child("UserInfo");
-        userDb.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
-                    if (dataSnapshot.child("gender").getValue() != null){
-                        userSex = dataSnapshot.child("gender").getValue().toString();
-                        switch (userSex){
-                            case "male":
-                                oppositeUserSex = "female";
-                                break;
-                            case "female":
-                                oppositeUserSex = "male";
-                                break;
+        if(mAuth.getCurrentUser() != null) {
+            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            DatabaseReference userDb = ref.child(user.getUid()).child("UserInfo");
+            userDb.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        if (dataSnapshot.child("gender").getValue() != null) {
+                            userSex = dataSnapshot.child("gender").getValue().toString();
+                            switch (userSex) {
+                                case "male":
+                                    oppositeUserSex = "female";
+                                    break;
+                                case "female":
+                                    oppositeUserSex = "male";
+                                    break;
+                            }
+                            getOppositeSexUsers();
                         }
-                        getOppositeSexUsers();
                     }
                 }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     public void getOppositeSexUsers(){

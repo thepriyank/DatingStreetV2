@@ -166,4 +166,12 @@ public class Settings extends AppCompatActivity {
         privacyPermissionCard.setClickable(false);
 
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this,MainActivity.class);
+        i.putExtra("openAccount",1);
+        startActivity(i);
+        finish();
+    }
 }

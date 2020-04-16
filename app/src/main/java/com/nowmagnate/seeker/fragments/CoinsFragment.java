@@ -1,10 +1,15 @@
 package com.nowmagnate.seeker.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +17,13 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.nowmagnate.seeker.BuyCoins;
 import com.nowmagnate.seeker.EarnCoins;
 import com.nowmagnate.seeker.R;
@@ -23,6 +35,12 @@ public class CoinsFragment extends Fragment {
     private CardView earnCard;
     private CardView buyCard;
     private TextView tvCoinsValue;
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser user = mAuth.getCurrentUser();
+
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference ref = database.getReference().child("Users");
 
     @Nullable
     @Override
@@ -64,6 +82,20 @@ public class CoinsFragment extends Fragment {
             }
         });
 
+        ref.child(user.getUid()).child("UserInfo").child("coins").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    tvCoinsValue.setText(dataSnapshot.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         return view;
     }
 
@@ -80,4 +112,6 @@ public class CoinsFragment extends Fragment {
         earnCard.setClickable(false);
         buyCard.setClickable(false);
     }
+
+
 }
